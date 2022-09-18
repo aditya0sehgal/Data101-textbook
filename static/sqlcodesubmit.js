@@ -1,4 +1,4 @@
-const sheetId = '1MZszw0E8LQr1JRdoJQO45Zk77_OdruCdl04KHFTLbcU';
+const sheetId = '1Iu-zCunodM-l1xH1sU50Huf6BDWoBBBG7xd_7u8plgk';
 const base = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?`;
 const query = encodeURIComponent('Select *')
 var jsondataquery={}
@@ -54,8 +54,9 @@ function sqlCodeSubmit(id){
     resultContainer.innerHTML = "";
     sqlcode=document.getElementById("sql-code-example-"+id).innerHTML;
     sqlcode=sqlcode.replaceAll("&nbsp;"," ");
-    sqlcode=sqlcode.replaceAll("<div>"," ");
-    sqlcode=sqlcode.replaceAll("</div>"," ");
+    var div = document.createElement("div");
+    div.innerHTML = sqlcode;
+    sqlcode = div.textContent || div.innerText || "";
     statement_type=sqlcode.split(" ")[0].toLowerCase();
     if(statement_type == "update" || statement_type == "insert" || statement_type == "upsert"){
         resultContainer.innerHTML="Cannot perform write operations.";
@@ -112,7 +113,7 @@ function sqlCodeSubmit(id){
 
 
 function init(){
-    var sheetName= 'Sheet3';
+    var sheetName= 'Sheet1';
     var url = `${base}&sheet=${sheetName}&tq=${query}`
     fetchGoogleSheetsData(url,"sqlsnippets")
     sheetName = 'Sheet2';
@@ -155,7 +156,6 @@ async function fetchGoogleSheetsData(url,type){
 }
 
 function createSectionJson(data_rows){
-    console.log("Hello this is section json")
     for(let i=0;i<data_rows.length;i++){
         var details=data_rows[i].c
         var sectionid=details[0].v
@@ -169,7 +169,6 @@ function createSectionJson(data_rows){
 }
 
 function createSqlJson(data_rows){
-    console.log("Hello this is sql json")
     for(let i=0;i<data_rows.length;i++){
         var dictsnip={}
         var details=data_rows[i].c
