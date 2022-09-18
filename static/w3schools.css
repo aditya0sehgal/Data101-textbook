@@ -568,19 +568,7 @@ box-sizing:content-box; line-height:normal;}
   font-display: swap;
 }
 
-/* fontawesome */
-@font-face {
-  font-family: 'fontawesome';
-  font-style: normal;
-  font-weight: normal;
-  src: url('fonts/fontawesome.eot?14663396'); /* IE9 Compat Modes */
-  src: url('fonts/fontawesome.eot?14663396#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('fonts/fontawesome.woff2?14663396') format('woff2'), /* Super Modern Browsers */
-       url('fonts/fontawesome.woff?14663396') format('woff'), /* Modern Browsers */
-       url('fonts/fontawesome.ttf?14663396') format('truetype'), /* Safari, Android, iOS */
-       url('fonts/fontawesome.svg?14663396#fontawesome') format('svg'); /* Legacy iOS */
-  font-display: swap;
-}
+
 
 .fa {
 display:inline-block;

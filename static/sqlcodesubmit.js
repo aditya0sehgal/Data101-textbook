@@ -215,3 +215,20 @@ function createSectionLHS(){
       }
       licurrent.click();
 }
+
+
+function toggleLHS(ele){
+    var lhs=document.getElementsByClassName("book-summary")[0];
+    var rhs=document.getElementsByClassName("book-body")[0];
+    let lhs_width=lhs.offsetWidth;
+    if(lhs_width > 1){
+    lhs.style.width="0px";
+    rhs.style.left="50px";
+    ele.style.left="30px";
+    }
+    else{
+        lhs.style.width="300px";
+        rhs.style.left="300px";
+        ele.style.left="270px";
+    }
+}

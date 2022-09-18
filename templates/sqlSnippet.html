@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>SQL Live Snippets</title>
     <link rel="shortcut icon" href="#">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
 	<link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" type="text/css" media="all" title="no title" charset="utf-8"/>
 	
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="/static/lhs.css">
 	
 	<style>
-    body { background-color:#fafafa; font-family:'Open Sans';}
+    body {font-family:'Open Sans';}
     .ws-btn{
         background-color: black;
     }
@@ -40,18 +40,28 @@
         font-size: 20px;
     }
     .toggle-bar{
-        padding: 10px 0px 0px 40px !important;
+        position: absolute !important;
+        padding: 0px !important;
+        left: 270px;
+        top: 12px;
+        z-index: 9;
+    }
+    .toggle-bar:hover {
+        color: #008cff;
+    }
+    .lhs-heading-menu{
+        display: flex;
     }
 	</style>
     
 </head>
 <body onload="init();">
+    <a class="toggle-bar" onclick="toggleLHS(this)" href="#"><i class="fa fa-align-justify"></i></a>
     <div class="book font-size-2 font-family-1 with-summary">
         <div class="book-summary">
             <nav role="navigation">
                 <ul class="summary" id="sql-sections">
-                <li ><a href="./">SQL Live Coding Tutorial Book</a>
-                    <!-- <a class="toggle-bar" onclick="toggleLHS()" href="#"><i class="fa fa-align-justify"></i></a> -->
+                <li class="lhs-heading-menu"><a href="./">SQL Live Coding Tutorial Book</a>
                 </li>
                 <li class="divider"></li>    
                 </ul>
