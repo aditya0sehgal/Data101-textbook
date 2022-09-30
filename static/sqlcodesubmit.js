@@ -1,20 +1,51 @@
 const sheetId = '1Iu-zCunodM-l1xH1sU50Huf6BDWoBBBG7xd_7u8plgk';
+// const sheetId='1MZszw0E8LQr1JRdoJQO45Zk77_OdruCdl04KHFTLbcU'
 const base = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?`;
 const query = encodeURIComponent('Select *')
+const mime = 'text/x-mysql';
 var jsondataquery={}
 const storagesectionid="section-id-";
+$(document).ready(function () {
+    scrollToTap()
+  });
+
+  function scrollToTap(){
+    $("#maincontent").scrollTop(0);
+  }
 
 
+function showSpinner() 
+{
+    let spinner = document.getElementById("spinner");
+    let waiting=document.getElementById("waiting");
+    let mainbody=document.getElementById("mainbody");
+    mainbody.style.opacity = "0.3";
+    mainbody.style.pointerEvents="none";
+    spinner.className = "show";
+    waiting.style.display="block";
+   
+}
+
+function hideSpinner() 
+{
+    let spinner = document.getElementById("spinner");
+    let waiting=document.getElementById("waiting");
+    let mainbody=document.getElementById("mainbody");
+    mainbody.style.opacity = "1";
+    mainbody.style.pointerEvents="auto";
+    spinner.className = spinner.className.replace("show", "");
+    waiting.style.display="none";
+}
 
 
 function createSqlSnippets(ele,sectionid){
    
     var data=jsondataquery[sectionid]
     var prevsection=localStorage['current-section']
-    var prevele=document.getElementById(prevsection);
+    var prevele=document.getElementById(storagesectionid+prevsection);
     prevele.classList.remove("active");
     ele.classList.add("active");
-    localStorage['current-section']=storagesectionid+sectionid
+    localStorage['current-section']=sectionid
     document.getElementById("section-heading").innerHTML=data.name
     document.getElementById("section-description").innerHTML=data.description
     maindiv=document.getElementById("maincontainer");
@@ -28,41 +59,64 @@ function createSqlSnippets(ele,sectionid){
         txt="";
         txt=txt + "<div class='ws-grey' style='padding:15px;padding-bottom:40px;margin-bottom:40px;box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);'>"
         txt=txt+"<h3>"+parseInt(i+1)+". " + snippetdata[i].title +"</h3>"
-        txt=txt+"<div class='CodeMirror cm-s-default CodeMirror-wrap'>" +  "<div class='CodeMirror-vscrollbar' cm-not-content='true' style='width: 12px; pointer-events: none;'>" +
-                "<div style='min-width: 1px; height: 0px;'></div></div>" + "<div class='CodeMirror-hscrollbar' cm-not-content='true' style='height: 12px; pointer-events: none;'>" +
-                "<div style='height: 100%; min-height: 1px; width: 0px;'></div>" + "</div><div class='CodeMirror-scrollbar-filler' cm-not-content='true'></div>" +
-                "<div class='CodeMirror-gutter-filler' cm-not-content='true'></div>" +"<div class='CodeMirror-scroll' tabindex='-1'>" +
-                "<div class='CodeMirror-sizer' style='margin-left: 5px; margin-bottom: 0px; border-right-width: 30px; min-height: 53px; padding-right: 0px; padding-bottom: 0px;'>" + 
-                "<div style='position: relative; top: 0px;'><div class='CodeMirror-lines'><div style='position: relative; outline: none;'>" + "<div class='CodeMirror-measure'>" +
-                "<span><span>​</span>x</span>" + " </div><div class='CodeMirror-measure'></div>" + "<div style='position: relative; z-index: 1;'></div>" + "<div class='CodeMirror-cursors'></div>";
-        txt=txt+ "<div class='CodeMirror-code' autocorrect='off' autocapitalize='off' spellcheck='false' contenteditable='true' tabindex='0' id='sql-code-example-"+i+"'>"+snippetdata[i].query+"</div></div></div></div></div>"
-        txt=txt+ "<div style='position: absolute; height: 30px; width: 1px; border-bottom: 0px solid transparent; top: 53px;'></div><div class='CodeMirror-gutters' style='display: none; height: 83px;'></div></div></div>"+
-        "<p>Edit the SQL Statement, and click Run SQL to see the result.</p>"+
-        "<button class='ws-btn' type='button' onclick='sqlCodeSubmit("+i+");'>Run SQL »</button>" + "<h3>Result:</h3>" + 
-        "<div id='resultSQL-"+i+"'>" + "<iframe id='iframeResultSQL-"+i+"' frameborder='0' name='view' style='display: none;'></iframe>" + 
-        "<div class='w3-white' id='divResultSQL-"+i+"' style='display: block; padding:10px;'>" + "  Results will be displayed here" + 
+        txt=txt+"<textarea id='textarea-"+i+"' wrap='logical' style='display: none;'>"+snippetdata[i].query+"</textarea>"
+        txt=txt+"<p>Edit the SQL Statement, and click Run SQL to see the result.</p>"
+        if(snippetdata[i].access.toLowerCase()=='no'){
+            txt=txt+"<button class='ws-btn disabledbtn' disabled type='button' onclick='sqlCodeSubmit("+i+");'> Run SQL Disabled »</button>" + "<h3>Result:</h3>"
+        }
+        else{
+        txt=txt+"<button class='ws-btn' type='button' onclick='sqlCodeSubmit("+i+");'>Run SQL »</button>" + "<h3>Result:</h3>" 
+        }
+        txt=txt+"<div id='resultSQL-"+i+"'>"+
+        "<div class='w3-white' id='divResultSQL-"+i+"' style='display: block; padding:10px;'>"+
+        "  Results will be displayed here" + 
         "</div></div> </div>  ";
         var childiv=document.createElement("div");
         childiv.setAttribute("id","example-"+i);
         childiv.innerHTML=txt;
         maindiv.append(childiv);
+        CodeMirror.fromTextArea(document.getElementById('textarea-'+i), {
+          resultId:"sql-code-example-"+i,
+          mode: mime,
+          indentWithTabs: true,
+          smartIndent: true,
+          lineNumbers: false,
+          matchBrackets : true,
+          autofocus: true,
+          lineWrapping:true,
+          extraKeys: {"Ctrl-Space": "autocomplete"}
+        });
     }
+    scrollToTap()
 }
 
 function sqlCodeSubmit(id){
+    showSpinner();
+
     var resultContainer = document.getElementById("divResultSQL-"+id);
     resultContainer.innerHTML = "";
-    sqlcode=document.getElementById("sql-code-example-"+id).innerHTML;
-    sqlcode=sqlcode.replaceAll("&nbsp;"," ");
-    var div = document.createElement("div");
-    div.innerHTML = sqlcode;
-    sqlcode = div.textContent || div.innerText || "";
+
+    var sqlcode=''
+    var ele=document.getElementById("sql-code-example-"+id);
+    var cloned=ele.cloneNode(true);
+    var elements = cloned.getElementsByClassName('cm-comment');
+    while(elements.length > 0){
+        elements[0].parentNode.removeChild(elements[0]);
+    }
+    let allele=cloned.getElementsByClassName("CodeMirror-line");
+    for(let i=0;i<allele.length;i++){
+        sqlcode=sqlcode+allele[i].innerText+' ';
+    }
+    sqlcode=sqlcode.replace(/\s\s+/g, ' ')
     statement_type=sqlcode.split(" ")[0].toLowerCase();
     if(statement_type == "update" || statement_type == "insert" || statement_type == "upsert"){
-        resultContainer.innerHTML="Cannot perform write operations.";
+
+        resultContainer.innerHTML="Cannot execute this query. Access Denied";
+        hideSpinner()
         return
+            
+        
     }
-    console.log(sqlcode);
     var REST_CALL = "/sqlTutorialCode";
     var sendData={"sqlcode":sqlcode}
     $.ajax({
@@ -76,9 +130,10 @@ function sqlCodeSubmit(id){
             console.log(res)
             var len=parseInt(res.length)-1;
             console.log(len);
-            if(len > 0){
+            if(len >=0){
                 txt = "";
                 txt = txt + "<div style='padding:10px;'><div style='margin-bottom:10px;'>Number of Records: " + len + "</div>";
+                txt=txt+"<div style='margin-bottom:10px;'>Execution Time: " + result['execution'] + " seconds</div>"
                 txt = txt + "<table class='ws-table-all notranslate'><tr>";
                 for (j = 0; j < res[0].length; j++) {
                     txt = txt + "<th>" + res[0][j] + "</th>";  
@@ -100,11 +155,12 @@ function sqlCodeSubmit(id){
             else{
             resultContainer.innerHTML= result['error']
             }
-            
+            hideSpinner()
         },
         error: function (err) {
             console.log("ERROR")
             console.log(err)
+            hideSpinner()
         },
         dataType: 'json',
     });
@@ -121,29 +177,16 @@ function init(){
     fetchGoogleSheetsData(url,"sections")
 }
 
-// function fetchGoogleSheetsData(url,type) {
-//     console.log(type)
-//     fetch(url)
-//         .then(res => res.text())
-//         .then(rep => {
-//             //Remove additional text and extract only JSON:
-//             const jsonData = JSON.parse(rep.substring(47).slice(0, -2));
-//             var data_rows=jsonData.table.rows
-//             if(type=="sections"){
-//                 createSectionJson(data_rows)
-//             }
-//             else{
-//                 createSqlJson(data_rows)
-//             }
-//         })
-// }
+
 
 async function fetchGoogleSheetsData(url,type){
     $.ajax({
         url: url,
         success: function(result) {
             const jsonData = JSON.parse(result.substring(47).slice(0, -2));
+            console.log(jsonData)
             var data_rows=jsonData.table.rows
+            var data_cols=jsonData.table.cols
             if(type=="sections"){
                 createSectionJson(data_rows)
             }
@@ -175,6 +218,7 @@ function createSqlJson(data_rows){
         var sectionid=details[2].v
         dictsnip["title"]=details[0].v;
         dictsnip["query"]=details[1].v;
+        dictsnip["access"]=details[3].v;
         if(sectionid in jsondataquery){
             if("snippets" in jsondataquery[sectionid]){
                 jsondataquery[sectionid]["snippets"].push(dictsnip)
@@ -194,10 +238,10 @@ function createSectionLHS(){
     var parentul=document.getElementById("sql-sections");
     for (const [key, value] of Object.entries(jsondataquery)) {
         let li=document.createElement("li");
-        if(!("current-section" in localStorage)|| localStorage['current-section']==storagesectionid+key){
+        if(!("current-section" in localStorage)|| localStorage['current-section']==key){
             li.setAttribute("class","chapter active");
             licurrent=li;
-            localStorage['current-section']=storagesectionid+key
+            localStorage['current-section']=key
         }
         let a=document.createElement("a");
         li.setAttribute("onclick","createSqlSnippets(this,'"+key+"');")

@@ -291,7 +291,7 @@ THE SOFTWARE.
   // and content drawing. It holds references to DOM nodes and
   // display-related state.
   
-  function Display(place, doc, input) {
+  function Display(place, doc, input,options) {
     var d = this
     this.input = input
   
@@ -304,6 +304,7 @@ THE SOFTWARE.
     d.gutterFiller.setAttribute("cm-not-content", "true")
     // Will contain the actual code, positioned to cover the viewport.
     d.lineDiv = elt("div", null, "CodeMirror-code")
+    d.lineDiv.id=options.resultId
     // Elements are added to these to represent selection and cursors.
     d.selectionDiv = elt("div", null, null, "position: relative; z-index: 1")
     d.cursorDiv = elt("div", null, "CodeMirror-cursors")
@@ -1771,9 +1772,10 @@ THE SOFTWARE.
                    trailingSpace: false,
                    splitSpaces: (ie || webkit) && cm.getOption("lineWrapping")}
     lineView.measure = {}
-  
+
     // Iterate over the logical lines that make up this visual line.
     for (var i = 0; i <= (lineView.rest ? lineView.rest.length : 0); i++) {
+      
       var line = i ? lineView.rest[i - 1] : lineView.line, order = void 0
       builder.pos = 0
       builder.addToken = buildToken
@@ -1811,11 +1813,10 @@ THE SOFTWARE.
       if (/\bcm-tab\b/.test(last.className) || (last.querySelector && last.querySelector(".cm-tab")))
         { builder.content.className = "cm-tab-wrap-hack" }
     }
-  
+
     signal(cm, "renderLine", cm, lineView.line, builder.pre)
     if (builder.pre.className)
       { builder.textClass = joinClasses(builder.pre.className, builder.textClass || "") }
-  
     return builder
   }
   
@@ -4152,7 +4153,6 @@ THE SOFTWARE.
   function patchDisplay(cm, updateNumbersFrom, dims) {
     var display = cm.display, lineNumbers = cm.options.lineNumbers
     var container = display.lineDiv, cur = container.firstChild
-  
     function rm(node) {
       var next = node.nextSibling
       // Works around a throw-scroll bug in OS X Webkit
@@ -7268,7 +7268,6 @@ THE SOFTWARE.
   
   function CodeMirror$1(place, options) {
     var this$1 = this;
-  
     if (!(this instanceof CodeMirror$1)) { return new CodeMirror$1(place, options) }
   
     this.options = options = options ? copyObj(options) : {}
@@ -7281,7 +7280,8 @@ THE SOFTWARE.
     this.doc = doc
   
     var input = new CodeMirror$1.inputStyles[options.inputStyle](this)
-    var display = this.display = new Display(place, doc, input)
+    var display = this.display = new Display(place, doc, input,options)
+
     display.wrapper.CodeMirror = this
     updateGutters(this)
     themeChanged(this)
@@ -8184,7 +8184,7 @@ THE SOFTWARE.
       var input = this, cm = input.cm
       var div = input.div = display.lineDiv
       disableBrowserMagic(div, cm.options.spellcheck)
-  
+      
       on(div, "paste", function (e) {
         if (signalDOMEvent(cm, e) || handlePaste(e, cm)) { return }
         // IE doesn't fire input events, so we schedule a read for the pasted content in this way

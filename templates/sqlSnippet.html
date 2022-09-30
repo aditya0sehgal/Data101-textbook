@@ -12,8 +12,15 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.2.0/jszip.min.js"></script>
 
-    <script type="text/javascript" src="/static/codemirror.js"></script>
-    <script type="text/javascript" src="/static/codemirror_sql.js"></script>
+    <link rel="stylesheet" href="/static/docs.css">
+    
+    <link rel="stylesheet" href="/static/codemirror-1.css">
+    <link rel="stylesheet" href="/static/show-hint.css">
+    <script src="/static/codemirror.js"></script>
+    <script src="/static/matchbrackets.js"></script>
+    <script src="/static/sql.js"></script>
+    <script src="/static/show-hint.js"></script>
+    <script src="/static/sql-hint.js"></script>
     <script type="text/javascript" src="/static/sqlcodesubmit.js"></script>
 
     <link rel="stylesheet" href="/static/w3schools.css">
@@ -21,7 +28,8 @@
     <link rel="stylesheet" href="/static/lhs.css">
 	
 	<style>
-    body {font-family:'Open Sans';}
+    body {font-family:'Open Sans';
+    background:white}
     .ws-btn{
         background-color: black;
     }
@@ -45,6 +53,8 @@
         left: 270px;
         top: 12px;
         z-index: 9;
+        outline: none !important;
+        color: black;
     }
     .toggle-bar:hover {
         color: #008cff;
@@ -52,12 +62,51 @@
     .lhs-heading-menu{
         display: flex;
     }
+    #spinner{
+        visibility: hidden;
+        width: 80px;
+        height: 80px;
+      
+        border: 2px solid #085ddd;
+        border-top:3px solid #0720fa;
+        border-radius: 100%;
+      
+        position: absolute;
+        top:0;
+        bottom:0;
+        left:0;
+        right: 0;
+        margin: auto;
+
+        animation: spin 1s infinite linear;
+      }
+      
+      @keyframes spin {
+        from {
+            transform: rotate(0deg);
+        } to {
+            transform: rotate(360deg);
+        }
+      }
+      
+      #spinner.show {
+        visibility: visible;
+      }
+      #waiting{
+        display: none;
+      }
+      .disabledbtn{
+        background-color: red !important;
+      }
+      .disabledbtn:hover{
+        background-color: red !important;
+      }
 	</style>
     
 </head>
-<body onload="init();">
+<body  onload="init();">
     <a class="toggle-bar" onclick="toggleLHS(this)" href="#"><i class="fa fa-align-justify"></i></a>
-    <div class="book font-size-2 font-family-1 with-summary">
+    <div id="mainbody" class="book font-size-2 font-family-1 with-summary">
         <div class="book-summary">
             <nav role="navigation">
                 <ul class="summary" id="sql-sections">
@@ -68,7 +117,7 @@
             </nav>
         </div>
 
-	    <div class="book-body fixed">
+	    <div id="maincontent" class="book-body fixed">
             <h2 id="section-heading"></h2>
             <p id="section-description"></p>
             <div id="maincontainer">
@@ -76,7 +125,9 @@
 		
     </div>
 </div>
-
+<div id="waiting">
+    <div id="spinner"></div> 
+</div>
 </body>
 </html>
 
