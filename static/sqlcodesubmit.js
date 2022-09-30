@@ -134,7 +134,7 @@ function sqlCodeSubmit(id){
                 txt = "";
                 txt = txt + "<div style='padding:10px;'><div style='margin-bottom:10px;'>Number of Records: " + len + "</div>";
                 txt=txt+"<div style='margin-bottom:10px;'>Execution Time: " + result['execution'] + " seconds</div>"
-                txt = txt + "<table class='ws-table-all notranslate'><tr>";
+                txt = txt + "<div class='table-scrollable'><table class='ws-table-all notranslate'><tr>";
                 for (j = 0; j < res[0].length; j++) {
                     txt = txt + "<th>" + res[0][j] + "</th>";  
                 }
@@ -150,7 +150,7 @@ function sqlCodeSubmit(id){
                     }
                     txt = txt + "</tr>";       
                 }
-                resultContainer.innerHTML =  txt + "</table></div>";
+                resultContainer.innerHTML =  txt + "</table></div></div>";
             }
             else{
             resultContainer.innerHTML= result['error']
