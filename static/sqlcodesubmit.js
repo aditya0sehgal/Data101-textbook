@@ -41,11 +41,11 @@ function hideSpinner()
 function createSqlSnippets(ele,sectionid){
    
     var data=jsondataquery[sectionid]
-    var prevsection=localStorage['current-section']
+    var prevsection=sessionStorage.getItem('current-section');
     var prevele=document.getElementById(storagesectionid+prevsection);
     prevele.classList.remove("active");
     ele.classList.add("active");
-    localStorage['current-section']=sectionid
+    sessionStorage.setItem('current-section', sectionid);
     document.getElementById("section-heading").innerHTML=data.name
     document.getElementById("section-description").innerHTML=data.description
     maindiv=document.getElementById("maincontainer");
@@ -238,10 +238,11 @@ function createSectionLHS(){
     var parentul=document.getElementById("sql-sections");
     for (const [key, value] of Object.entries(jsondataquery)) {
         let li=document.createElement("li");
-        if(!("current-section" in localStorage)|| localStorage['current-section']==key){
+        if(!("current-section" in sessionStorage)|| sessionStorage.getItem("current-section")==key){
             li.setAttribute("class","chapter active");
             licurrent=li;
-            localStorage['current-section']=key
+            sessionStorage.setItem('current-section',key);
+
         }
         let a=document.createElement("a");
         li.setAttribute("onclick","createSqlSnippets(this,'"+key+"');")
