@@ -108,7 +108,9 @@ function sqlCodeSubmit(id){
         sqlcode=sqlcode+allele[i].innerText+' ';
     }
     sqlcode=sqlcode.replace(/\s\s+/g, ' ')
+    sqlcode=sqlcode.replace(/[\u200B-\u200D\uFEFF]/g, '');
     statement_type=sqlcode.split(" ")[0].toLowerCase();
+    console.log(sqlcode)
     if(statement_type == "update" || statement_type == "insert" || statement_type == "upsert"){
 
         resultContainer.innerHTML="Cannot execute this query. Access Denied";
@@ -135,6 +137,7 @@ function sqlCodeSubmit(id){
                 txt = txt + "<div style='padding:10px;'><div style='margin-bottom:10px;'>Number of Records: " + len + "</div>";
                 txt=txt+"<div style='margin-bottom:10px;'>Execution Time: " + result['execution'] + " seconds</div>"
                 txt = txt + "<div class='table-scrollable'><table class='ws-table-all notranslate'><tr>";
+                
                 for (j = 0; j < res[0].length; j++) {
                     txt = txt + "<th>" + res[0][j] + "</th>";  
                 }
