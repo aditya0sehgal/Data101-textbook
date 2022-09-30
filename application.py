@@ -49,8 +49,11 @@ def sqlTutorialCode():
         details=list(details)
         details = [[str(j) for j in i] for i in details]
         details.insert(0,field_names)
+        
     except pymysql.Error as e:
         error = "Error occured: " + str(e)
+    cur.close()
+    conn.close()
     return {"result":details,"error":error,"execution":execution_time}
 
 if __name__ == "__main__":
