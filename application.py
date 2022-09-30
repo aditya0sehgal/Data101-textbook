@@ -38,7 +38,6 @@ def sqlTutorialCode():
     db = "BarBeerDrinker", 
     )
     cur = conn.cursor()
-    print("START")
     try:
         start_time = time.time()
         cur.execute(sqlcode)
