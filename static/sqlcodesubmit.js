@@ -110,15 +110,6 @@ function sqlCodeSubmit(id){
     sqlcode=sqlcode.replace(/\s\s+/g, ' ')
     sqlcode=sqlcode.replace(/[\u200B-\u200D\uFEFF]/g, '');
     statement_type=sqlcode.split(" ")[0].toLowerCase();
-    console.log(sqlcode)
-    if(statement_type == "update" || statement_type == "insert" || statement_type == "upsert"){
-
-        resultContainer.innerHTML="Cannot execute this query. Access Denied";
-        hideSpinner()
-        return
-            
-        
-    }
     var REST_CALL = "/sqlTutorialCode";
     var sendData={"sqlcode":sqlcode}
     $.ajax({
