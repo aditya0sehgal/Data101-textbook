@@ -118,15 +118,12 @@ function sqlCodeSubmit(id){
         type: 'POST',
         contentType: "application/json",
         success: function(result) {
-            console.log(result);
             res=result['result']
-            console.log(res)
             var len=parseInt(res.length)-1;
-            console.log(len);
             if(len >=0){
                 txt = "";
                 txt = txt + "<div style='padding:10px;'><div style='margin-bottom:10px;'>Number of Records: " + len + "</div>";
-                txt=txt+"<div style='margin-bottom:10px;'>Execution Time: " + result['execution'] + " seconds</div>"
+                txt=txt+"<div style='margin-bottom:10px;'>Execution Time: " + parseFloat(result['execution']).toFixed(3) + " seconds</div>"
                 txt = txt + "<div class='table-scrollable'><table class='ws-table-all notranslate'><tr>";
                 
                 for (j = 0; j < res[0].length; j++) {
@@ -178,7 +175,6 @@ async function fetchGoogleSheetsData(url,type){
         url: url,
         success: function(result) {
             const jsonData = JSON.parse(result.substring(47).slice(0, -2));
-            console.log(jsonData)
             var data_rows=jsonData.table.rows
             var data_cols=jsonData.table.cols
             if(type=="sections"){
