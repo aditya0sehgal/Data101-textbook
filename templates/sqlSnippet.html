@@ -6,12 +6,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>SQL Live Snippets</title>
     <link rel="shortcut icon" href="#">
-    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
+
 	<link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" type="text/css" media="all" title="no title" charset="utf-8"/>
 	
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.2.0/jszip.min.js"></script>
 
+
+ 
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.js"></script>
+
+    
     <link rel="stylesheet" href="/static/docs.css">
     
     <link rel="stylesheet" href="/static/codemirror-1.css">
@@ -26,6 +31,7 @@
     <link rel="stylesheet" href="/static/w3schools.css">
     <link rel="stylesheet" href="/static/codemirror.css">
     <link rel="stylesheet" href="/static/lhs.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.css"/>
 	
 	<style>
     body {font-family:'Open Sans';
@@ -101,11 +107,14 @@
       .disabledbtn:hover{
         background-color: red !important;
       }
-      .table-scrollable{
-        max-height: 700px;
-        overflow: auto;
+
+      th { background: lightblue; } 
+      .dataTables_filter{
+        margin: 0px 0 10px 0;
       }
-      .table-scrollable tr th { position: sticky; top: 0; z-index: 1;background: lightblue; }
+      .dataTables_scrollBody{
+        height: auto !important;
+      }
 	</style>
     
 </head>

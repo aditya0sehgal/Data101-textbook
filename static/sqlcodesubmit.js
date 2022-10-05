@@ -118,30 +118,29 @@ function sqlCodeSubmit(id){
         type: 'POST',
         contentType: "application/json",
         success: function(result) {
+            console.log(result)
             res=result['result']
-            var len=parseInt(res.length)-1;
-            if(len >=0){
+            var len=parseInt(res.length)
+            cols=[]
+            if(len >0){
+                for(let i=0;i<result['cols'].length;i++){
+                    cols.push({title:result['cols'][i],data:result['cols'][i]})
+                }
                 txt = "";
                 txt = txt + "<div style='padding:10px;'><div style='margin-bottom:10px;'>Number of Records: " + len + "</div>";
                 txt=txt+"<div style='margin-bottom:10px;'>Execution Time: " + parseFloat(result['execution']).toFixed(3) + " seconds</div>"
-                txt = txt + "<div class='table-scrollable'><table class='ws-table-all notranslate'><tr>";
-                
-                for (j = 0; j < res[0].length; j++) {
-                    txt = txt + "<th>" + res[0][j] + "</th>";  
-                }
-                txt = txt + "</tr>";
-                for (i = 1; i < len+1; i++) {
-                    txt = txt + "<tr>";       
-                    for (j = 0; j < res[0].length; j++) {
-                        if (res[i][j] == null) {
-                            txt = txt + "<td><i>null</i></td>";  
-                        } else {
-                            txt = txt + "<td>" + res[i][j] + "</td>";
-                        }                                    
-                    }
-                    txt = txt + "</tr>";       
-                }
-                resultContainer.innerHTML =  txt + "</table></div></div>";
+                txt = txt + "<div class=''><table id='tableresult-"+id+"' class='ws-table-all notranslate'>";
+                resultContainer.innerHTML =  txt + "</table></div>";
+                $('#tableresult-'+id).DataTable({
+                    data:result['result'],
+                    columns:cols,
+                    columnDefs: [{
+                        "targets": '_all',
+                        "defaultContent": "null"
+                    }],
+                    paging: false,
+                    scrollY: 700
+                });
             }
             else{
             resultContainer.innerHTML= result['error']
