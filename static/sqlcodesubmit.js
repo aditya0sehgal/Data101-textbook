@@ -139,7 +139,8 @@ function sqlCodeSubmit(id){
                         "defaultContent": "null"
                     }],
                     paging: false,
-                    scrollY: 700
+                    scrollY: 700,
+                    responsive: true
                 });
             }
             else{
@@ -150,6 +151,7 @@ function sqlCodeSubmit(id){
         error: function (err) {
             console.log("ERROR")
             console.log(err)
+            resultContainer.innerHTML='Error Occured: Lost connection to MySQL server during query (timed out)'
             hideSpinner()
         },
         dataType: 'json',

@@ -37,9 +37,10 @@ def sqlTutorialCode():
     user = "student", 
     password = "cs336", 
     db = "BarBeerDrinker", 
-    read_timeout=60
+    read_timeout=30
     )
     cur = conn.cursor(pymysql.cursors.DictCursor)
+    print("Start")
     try:
         start_time = time.time()
         cur.execute(sqlcode)
@@ -49,6 +50,7 @@ def sqlTutorialCode():
         field_names = [i[0] for i in cur.description]
         
     except pymysql.Error as e:
+        print("Errorr")
         error = "Error occured: " + str(e)
     cur.close()
     conn.close()
