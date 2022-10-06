@@ -2,7 +2,14 @@ from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 import pymysql
 import time
-import simplejson
+from flask.json import JSONEncoder
+import decimal
+
+class JsonEncoder(JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, decimal.Decimal):
+            return float(obj)
+        return JSONEncoder.default(self, obj)
 
 
 application = Flask(__name__)
@@ -25,6 +32,7 @@ def sqlsnippet():
 
 @application.route('/sqlTutorialCode', methods=['POST'])
 def sqlTutorialCode():
+    application.json_encoder = JsonEncoder
     data=request.get_json()
     sqlcode=data["sqlcode"]
     error=''
