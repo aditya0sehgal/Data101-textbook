@@ -14,8 +14,8 @@ class JsonEncoder(JSONEncoder):
 
 application = Flask(__name__)
 CORS(application)
-
-
+application.json_encoder = JsonEncoder
+publish = False
  
 
 @application.route('/', methods=['GET'])
@@ -32,8 +32,13 @@ def sqlsnippet():
 
 @application.route('/sqlTutorialCode', methods=['POST'])
 def sqlTutorialCode():
-    application.json_encoder = JsonEncoder
     data=request.get_json()
+    mode=data["mode"]
+    print(mode)
+    print(publish)
+    if((not publish) and mode!='teacher'):
+         return jsonify({"result":[],"cols":[],"error":"Access Denied by professor","execution":0})
+
     sqlcode=data["sqlcode"]
     error=''
     execution_time=0
@@ -62,6 +67,26 @@ def sqlTutorialCode():
     cur.close()
     conn.close()
     return jsonify({"result":details,"cols":field_names,"error":error,"execution":execution_time})
+
+
+
+@application.route('/login', methods=['POST'])
+def login():
+    data=request.get_json()
+    password=data["password"]
+    if(password=='letmein'):
+        return jsonify({"result":'true'})
+    else:
+         return jsonify({"result":'false'})
+    
+
+@application.route('/publish', methods=['POST'])
+def publish_access():
+    data=request.get_json()
+    global publish
+    publish=data["publish"]
+    print(publish)
+    return {}
 
 
 def getSqlConnection():

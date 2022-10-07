@@ -57,22 +57,21 @@ function createSqlSnippets(ele,sectionid){
     var snippetdata=data.snippets
     for(let i=0;i<snippetdata.length;i++){
         txt="";
-        txt=txt + "<div class='ws-grey' style='padding:15px;padding-bottom:40px;margin-bottom:40px;box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);'>"
-        txt=txt+"<h3>"+parseInt(i+1)+". " + snippetdata[i].title +"</h3>"
-        txt=txt+"<textarea id='textarea-"+i+"' wrap='logical' style='display: none;'>"+snippetdata[i].query+"</textarea>"
+        txt=txt + "<div class='ws-grey' style='padding:15px;padding-bottom:40px;margin-bottom:0px;box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);'>"
+        txt=txt+"<h3>"+parseInt(i+1)+". " + snippetdata[i].Title +"</h3>"
+        txt=txt+"<textarea id='textarea-"+i+"' wrap='logical' style='display: none;'>"+snippetdata[i].Query+"</textarea>"
         txt=txt+"<p>Edit the SQL Statement, and click Run SQL to see the result.</p>"
-        if(snippetdata[i].access.toLowerCase()=='no'){
-            txt=txt+"<button class='ws-btn disabledbtn' disabled type='button' onclick='sqlCodeSubmit("+i+");'> Run SQL Disabled »</button>" + "<h3>Result:</h3>"
-        }
-        else{
         txt=txt+"<button class='ws-btn' type='button' onclick='sqlCodeSubmit("+i+");'>Run SQL »</button>" + "<h3>Result:</h3>" 
-        }
         txt=txt+"<div id='resultSQL-"+i+"'>"+
         "<div class='w3-white' id='divResultSQL-"+i+"' style='display: block; padding:10px;'>"+
         "  Results will be displayed here" + 
         "</div></div> </div>  ";
         var childiv=document.createElement("div");
         childiv.setAttribute("id","example-"+i);
+        childiv.setAttribute("class","outersnippetdiv");
+        if(snippetdata[i].Width){
+            childiv.setAttribute("style","width:"+parseFloat(snippetdata[i].Width)*100+"%");
+        }
         childiv.innerHTML=txt;
         maindiv.append(childiv);
         CodeMirror.fromTextArea(document.getElementById('textarea-'+i), {
@@ -92,7 +91,6 @@ function createSqlSnippets(ele,sectionid){
 
 function sqlCodeSubmit(id){
     showSpinner();
-
     var resultContainer = document.getElementById("divResultSQL-"+id);
     resultContainer.innerHTML = "";
 
@@ -110,8 +108,9 @@ function sqlCodeSubmit(id){
     sqlcode=sqlcode.replace(/\s\s+/g, ' ')
     sqlcode=sqlcode.replace(/[\u200B-\u200D\uFEFF]/g, '');
     statement_type=sqlcode.split(" ")[0].toLowerCase();
+    var mode=document.getElementById("modes").value
     var REST_CALL = "/sqlTutorialCode";
-    var sendData={"sqlcode":sqlcode}
+    var sendData={"sqlcode":sqlcode,"mode":mode}
     $.ajax({
         url: REST_CALL,
         data: JSON.stringify(sendData),
@@ -179,17 +178,17 @@ async function fetchGoogleSheetsData(url,type){
             var data_rows=jsonData.table.rows
             var data_cols=jsonData.table.cols
             if(type=="sections"){
-                createSectionJson(data_rows)
+                createSectionJson(data_rows,data_cols)
             }
             else{
-                createSqlJson(data_rows)
+                createSqlJson(data_rows,data_cols)
             }
         },
         async:false
     });
 }
 
-function createSectionJson(data_rows){
+function createSectionJson(data_rows,data_cols){
     for(let i=0;i<data_rows.length;i++){
         var details=data_rows[i].c
         var sectionid=details[0].v
@@ -202,14 +201,15 @@ function createSectionJson(data_rows){
     createSectionLHS()
 }
 
-function createSqlJson(data_rows){
+function createSqlJson(data_rows,data_cols){
+
     for(let i=0;i<data_rows.length;i++){
         var dictsnip={}
         var details=data_rows[i].c
-        var sectionid=details[2].v
-        dictsnip["title"]=details[0].v;
-        dictsnip["query"]=details[1].v;
-        dictsnip["access"]=details[3].v;
+        for(let j=0;j<data_cols.length;j++){
+            dictsnip[data_cols[j].label]=details[j].v
+        }
+        let sectionid=dictsnip["Section"]
         if(sectionid in jsondataquery){
             if("snippets" in jsondataquery[sectionid]){
                 jsondataquery[sectionid]["snippets"].push(dictsnip)
@@ -268,3 +268,26 @@ function toggleLHS(ele){
         ele.style.left="270px";
     }
 }
+
+
+function login() {
+    var pass1="letmein";
+
+    $('#loginModal').modal('show');
+
+
+    $("#loginForm").submit(function(event) {
+      event.preventDefault(); 
+      var password = $("#modalpass").val(); 
+  
+      if (password == pass1){
+        console.log("hellooo")
+        $('#loginModal').modal('hide');
+           return 1
+      }
+      else {
+        $('#loginModal').modal('hide');
+        return 0
+      }
+    });
+  }

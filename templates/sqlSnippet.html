@@ -12,6 +12,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.2.0/jszip.min.js"></script>
 
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" />
 
  
 <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.js"></script>
@@ -115,6 +117,68 @@
       .dataTables_scrollBody{
         height: auto !important;
       }
+      .modal-dialog {
+        height: 90%; /* = 90% of the .modal-backdrop block = %90 of the screen */
+      }
+      .outersnippetdiv{
+        width: 100%;
+        float: left;
+        margin-bottom: 40px;
+      }
+      .toggle {
+        cursor: pointer;
+        display: inline-block;
+      }
+      
+      .toggle-switch {
+        display: inline-block;
+        background: #ccc;
+        border-radius: 16px;
+        width: 58px;
+        height: 32px;
+        position: relative;
+        vertical-align: middle;
+        transition: background 0.25s;
+      }
+      .toggle-switch:before, .toggle-switch:after {
+        content: "";
+      }
+      .toggle-switch:before {
+        display: block;
+        background: linear-gradient(to bottom, #fff 0%, #eee 100%);
+        border-radius: 50%;
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
+        width: 24px;
+        height: 24px;
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        transition: left 0.25s;
+      }
+      .toggle:hover .toggle-switch:before {
+        background: linear-gradient(to bottom, #fff 0%, #fff 100%);
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+      }
+      .toggle-checkbox:checked + .toggle-switch {
+        background: #56c080;
+      }
+      .toggle-checkbox:checked + .toggle-switch:before {
+        left: 30px;
+      }
+      
+      .toggle-checkbox {
+        position: absolute;
+        visibility: hidden;
+      }
+      
+      .toggle-label {
+        margin-left: 5px;
+        position: relative;
+        top: 2px;
+      }
+      #publishtoggle{
+        display: none;
+      }
 	</style>
     
 </head>
@@ -132,6 +196,20 @@
         </div>
 
 	    <div id="maincontent" class="book-body fixed">
+            <div style="display: flex;
+            justify-content: space-around;
+            align-items: center;">
+            <select name="cars" id="modes" onchange="changeMode(this);" >
+                <option value="student">Student Mode</option>
+                <option value="teacher">Teacher Mode</option>
+              </select>
+              <label id="publishtoggle" class="toggle">
+                <input class="toggle-checkbox" type="checkbox" onchange="changepublish(this)">
+                <div class="toggle-switch"></div>
+                <span class="toggle-label">Publish</span>
+                <span class="toggle-label" id="state_publish">State: Not published </span>
+              </label>
+            </div>
             <h2 id="section-heading"></h2>
             <p id="section-description"></p>
             <div id="maincontainer">
@@ -139,9 +217,108 @@
 		
     </div>
 </div>
+<div class="modal fade" id="loginModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="loginModalLabel">Login to run the query</h5>
+        </div>
+        <form id="loginForm"> 
+        <div class="modal-body">
+            <div class="form-group">
+              <label for="modalpass" class="col-form-label">Password:</label>
+              <input type="password" name="modalpass" class="form-control" id="modalpass">
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="closemodal" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Login</button>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
 <div id="waiting">
     <div id="spinner"></div> 
 </div>
+<script>
+    function closeModal(){
+        $('#loginModal').modal('hide');
+        document.getElementById("modes").value="student"
+    }
+    async function changeMode(ele){
+        console.log(ele.selectedIndex)
+        var maindiv=document.getElementById("maincontent");
+
+        if(ele.value=='teacher'){
+            let promise = new Promise((resolve, reject) => {
+                $('#loginModal').modal('show');
+                $("#loginForm").submit(function(event) {
+                    event.preventDefault(); 
+                    var password = $("#modalpass").val(); 
+                    $.ajax({
+                        url: "/login",
+                        data: JSON.stringify({"password":password}),
+                        type: 'POST',
+                        contentType: "application/json",
+                        dataType: 'json',
+                        success: function(result) {
+                            console.log(result)
+                            res=result['result']
+                            if(res=='true'){
+                                $('#loginModal').modal('hide');
+                                resolve(1)
+                            }
+                            else{
+                                $('#loginModal').modal('hide');
+                                resolve(0)
+                            }
+                        },
+                        error: function (err) {
+                            resolve(0)
+                        },
+                    });
+                  });
+              });
+            let result = await promise;
+
+            if(result){
+                document.getElementById("publishtoggle").style.display="block"
+            }
+            else{
+                document.getElementById("modes").value="student"
+            }
+           
+        }
+        else{
+            document.getElementById("publishtoggle").style.display="none"
+        }
+    }
+
+    function changepublish(ele){
+        let publish_status=$(ele).is(":checked")
+        console.log($(ele).is(":checked"))
+        $.ajax({
+            url: "/publish",
+            data: JSON.stringify({"publish":publish_status}),
+            type: 'POST',
+            contentType: "application/json",
+            dataType: 'json',
+            success: function(result) {
+                if(publish_status){
+                document.getElementById("state_publish").innerHTML='State: Published'
+                }
+                else{
+                    document.getElementById("state_publish").innerHTML='State: Not published'
+                }
+
+            },
+            error: function (err) {
+                document.getElementById("state_publish").innerHTML='Error in publishing'
+            }
+        });
+    }
+</script>
 </body>
 </html>
 
