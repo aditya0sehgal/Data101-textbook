@@ -56,6 +56,7 @@ function createSqlSnippets(ele,sectionid){
     }
     var snippetdata=data.snippets
     for(let i=0;i<snippetdata.length;i++){
+
         txt="";
         txt=txt + "<div class='ws-grey' style='padding:15px;padding-bottom:40px;margin-bottom:0px;box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);'>"
         txt=txt+"<h3>"+parseInt(i+1)+". " + snippetdata[i].Title +"</h3>"
@@ -108,9 +109,9 @@ function sqlCodeSubmit(id){
     sqlcode=sqlcode.replace(/\s\s+/g, ' ')
     sqlcode=sqlcode.replace(/[\u200B-\u200D\uFEFF]/g, '');
     statement_type=sqlcode.split(" ")[0].toLowerCase();
-    var mode=document.getElementById("modes").value
+
     var REST_CALL = "/sqlTutorialCode";
-    var sendData={"sqlcode":sqlcode,"mode":mode}
+    var sendData={"sqlcode":sqlcode}
     $.ajax({
         url: REST_CALL,
         data: JSON.stringify(sendData),
@@ -130,6 +131,9 @@ function sqlCodeSubmit(id){
                 txt=txt+"<div style='margin-bottom:10px;'>Execution Time: " + parseFloat(result['execution']).toFixed(3) + " seconds</div>"
                 txt = txt + "<div class=''><table id='tableresult-"+id+"' class='ws-table-all notranslate'>";
                 resultContainer.innerHTML =  txt + "</table></div>";
+                console.log(cols)
+                console.log(res)
+                console.log(res[0][cols[0]['data']])
                 $('#tableresult-'+id).DataTable({
                     data:result['result'],
                     columns:cols,
