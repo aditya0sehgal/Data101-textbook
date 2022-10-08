@@ -206,12 +206,19 @@ function createSectionJson(data_rows,data_cols){
 }
 
 function createSqlJson(data_rows,data_cols){
-
+    console.log(data_rows)
+    console.log(data_cols)
     for(let i=0;i<data_rows.length;i++){
         var dictsnip={}
         var details=data_rows[i].c
         for(let j=0;j<data_cols.length;j++){
-            dictsnip[data_cols[j].label]=details[j].v
+            console.log(details[j])
+            if(details[j]){
+                dictsnip[data_cols[j].label]=details[j].v
+            }
+            else{
+                dictsnip[data_cols[j].label]=null
+            }
         }
         let sectionid=dictsnip["Section"]
         if(sectionid in jsondataquery){
