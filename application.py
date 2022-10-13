@@ -51,6 +51,8 @@ def sqlTutorialCode():
         details=cur.fetchall()
         field_names = [i[0] for i in cur.description]
     except pymysql.Error as e:
+        print(str(e))
+        print(e)
         if(str(e)=="(2013, 'Lost connection to MySQL server during query (timed out)')"):
             conn1,cur1 = getSqlConnection()
             cur1.execute("KILL "+str(pid))

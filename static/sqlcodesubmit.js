@@ -91,9 +91,36 @@ function createSqlSnippets(ele,sectionid){
 }
 
 function sqlCodeSubmit(id){
+    console.log(jsondataquery)
+   console.log(jsondataquery[sessionStorage.getItem('current-section')]['snippets'][id].Result)
     showSpinner();
     var resultContainer = document.getElementById("divResultSQL-"+id);
     resultContainer.innerHTML = "";
+    var existing_result=jsondataquery[sessionStorage.getItem('current-section')]['snippets'][id].Result
+    if(existing_result){
+        txt = "";
+        txt = txt + "<div style='padding:10px;'><div style='margin-bottom:10px;'>Number of Records: " + 1 + "</div>";
+        txt=txt+"<div style='margin-bottom:10px;'>Execution Time: " + 0.05 + " seconds</div>"
+        txt = txt + "<div class=''><table id='tableresult-"+id+"' class='ws-table-all notranslate'>";
+        resultContainer.innerHTML =  txt + "</table></div>";
+        $('#tableresult-'+id).DataTable({
+            data:[{
+                'result':existing_result
+            }],
+            columns:[{title:'result',data:'result'}],
+            columnDefs: [{
+                "targets": '_all',
+                "defaultContent": "null"
+            }],
+            paging: false,
+            scrollY: 700,
+            responsive: true
+        });
+        hideSpinner()
+        return
+    }
+
+
 
     var sqlcode=''
     var ele=document.getElementById("sql-code-example-"+id);
@@ -109,7 +136,7 @@ function sqlCodeSubmit(id){
     sqlcode=sqlcode.replace(/\s\s+/g, ' ')
     sqlcode=sqlcode.replace(/[\u200B-\u200D\uFEFF]/g, '');
     statement_type=sqlcode.split(" ")[0].toLowerCase();
-
+    console.log(sqlcode)
     var REST_CALL = "/sqlTutorialCode";
     var sendData={"sqlcode":sqlcode}
     $.ajax({
@@ -118,7 +145,6 @@ function sqlCodeSubmit(id){
         type: 'POST',
         contentType: "application/json",
         success: function(result) {
-            console.log(result)
             res=result['result']
             var len=parseInt(res.length)
             cols=[]
@@ -131,9 +157,6 @@ function sqlCodeSubmit(id){
                 txt=txt+"<div style='margin-bottom:10px;'>Execution Time: " + parseFloat(result['execution']).toFixed(3) + " seconds</div>"
                 txt = txt + "<div class=''><table id='tableresult-"+id+"' class='ws-table-all notranslate'>";
                 resultContainer.innerHTML =  txt + "</table></div>";
-                console.log(cols)
-                console.log(res)
-                console.log(res[0][cols[0]['data']])
                 $('#tableresult-'+id).DataTable({
                     data:result['result'],
                     columns:cols,
@@ -147,14 +170,14 @@ function sqlCodeSubmit(id){
                 });
             }
             else{
-            resultContainer.innerHTML= result['error']
+                resultContainer.innerHTML='Please run the above query in the local workbench.'
             }
             hideSpinner()
         },
         error: function (err) {
             console.log("ERROR")
             console.log(err)
-            resultContainer.innerHTML='Error Occured: Lost connection to MySQL server during query (timed out)'
+            resultContainer.innerHTML='Please run the above query in the local workbench.'
             hideSpinner()
         },
         dataType: 'json',
@@ -193,14 +216,22 @@ async function fetchGoogleSheetsData(url,type){
 }
 
 function createSectionJson(data_rows,data_cols){
+    console.log(data_rows)
     for(let i=0;i<data_rows.length;i++){
         var details=data_rows[i].c
         var sectionid=details[0].v
         if(!(sectionid in jsondataquery)){
             jsondataquery[sectionid]={}
         }
+        console.log(details)
+        if(details[2]){
+           jsondataquery[sectionid]["description"]=details[2].v
+        } 
+        else{
+            jsondataquery[sectionid]["description"]=""
+        }
         jsondataquery[sectionid]["name"]=details[1].v
-        jsondataquery[sectionid]["description"]=details[2].v
+        
     }
     createSectionLHS()
 }
