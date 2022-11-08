@@ -7,7 +7,8 @@ import decimal
 import pymongo
 from bson import ObjectId
 from pymongo import MongoClient
-
+import bson.json_util as json_util
+import json
 
 class JsonEncoder(JSONEncoder):
     def default(self, obj):
@@ -68,7 +69,7 @@ def sqlTutorialCode():
         error = "Error occured: " + str(e)
     cur.close()
     conn.close()
-    return jsonify({"result":details,"cols":field_names,"error":error,"execution":execution_time})
+    return jsonify(json.dumps({"result":details,"cols":field_names,"error":error,"execution":execution_time},cls=JsonEncoder))
 
 
 @application.route('/mongoTutorialCode', methods=['POST'])
@@ -88,7 +89,7 @@ def mongoTutorialCode():
             res.append(val)
     else:
          res.append(x)
-    return jsonify({"result":res,"execution":execution_time})
+    return jsonify(json_util.dumps({"result":res,"execution":execution_time}))
 
 def getMongoDbConnection():
     client = MongoClient('mongodb+srv://db-mongodb-nyc1-62083-a7614619.mongo.ondigitalocean.com',

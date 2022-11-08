@@ -151,11 +151,13 @@ function sqlCodeSubmit(id){
         contentType: "application/json",
         success: function(result) {
             console.log(result)
+            result=JSON.parse(result)
             if (type=='mongo'){
                 txt = "";
+                console.log(result['result'])
                 txt = txt + "<div style='padding:10px;'><div style='margin-bottom:10px;'>Number of Records: " + result['result'].length+ "</div>";
-                txt=txt+"<div style='margin-bottom:10px;'>Execution Time: " + parseFloat(result['execution']).toFixed(3) + " seconds</div>"
-                resultContainer.innerHTML = txt + '<div class="" style="height:600px;overflow-y: auto;"><pre>' + JSON.stringify(result['result'], null, 4) + '</pre></div>';
+                txt=txt+"<div style='margin-bottom:10px;'>Execution Time: " + parseFloat(result['execution']).toFixed(5) + " seconds</div>"
+                resultContainer.innerHTML = txt + '<div class="" style="height:auto;max-height:600px;overflow-y: auto;"><pre>' + JSON.stringify(result['result'], null, 4) + '</pre></div>';
                 hideSpinner()
                 return
             }
