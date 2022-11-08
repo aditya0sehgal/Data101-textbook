@@ -1,0 +1,91 @@
+body {font-family:'Open Sans';
+    background:white}
+    .ws-btn{
+        background-color: black;
+    }
+    .ws-grey{
+    background-color:rgb(231, 233, 235) !important
+    }
+    #maincontainer{
+        display: none;
+    }
+    .book-body{
+        padding-left: 25px;
+        padding-right: 25px;
+        padding-top: 10px;
+    }
+    #section-description{
+        font-size: 20px;
+    }
+    .toggle-bar{
+        position: absolute !important;
+        padding: 0px !important;
+        left: 270px;
+        top: 12px;
+        z-index: 9;
+        outline: none !important;
+        color: black;
+    }
+    .toggle-bar:hover {
+        color: #008cff;
+    }
+    .lhs-heading-menu{
+        display: flex;
+    }
+    #spinner{
+        visibility: hidden;
+        width: 80px;
+        height: 80px;
+      
+        border: 2px solid #085ddd;
+        border-top:3px solid #0720fa;
+        border-radius: 100%;
+      
+        position: absolute;
+        top:0;
+        bottom:0;
+        left:0;
+        right: 0;
+        margin: auto;
+
+        animation: spin 1s infinite linear;
+      }
+      
+      @keyframes spin {
+        from {
+            transform: rotate(0deg);
+        } to {
+            transform: rotate(360deg);
+        }
+      }
+      
+      #spinner.show {
+        visibility: visible;
+      }
+      #waiting{
+        display: none;
+      }
+      .disabledbtn{
+        background-color: red !important;
+      }
+      .disabledbtn:hover{
+        background-color: red !important;
+      }
+
+      th { background: lightblue; } 
+      .dataTables_filter{
+        margin: 0px 0 10px 0;
+      }
+      .dataTables_scrollBody{
+        height: auto !important;
+      }
+     
+      .outersnippetdiv{
+        width: 100%;
+        float: left;
+        margin-bottom: 40px;
+      }
+      
+      #section-description{
+        white-space: pre-line;
+      }

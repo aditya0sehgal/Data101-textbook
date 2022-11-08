@@ -1,5 +1,5 @@
 const sheetId = '1Iu-zCunodM-l1xH1sU50Huf6BDWoBBBG7xd_7u8plgk';
-// const sheetId='1MZszw0E8LQr1JRdoJQO45Zk77_OdruCdl04KHFTLbcU'
+// const sheetId='12iRkOmBHaahLrLbBLvqnzSKzWOsO1xHEQckGvXNpD-o'
 const base = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?`;
 const query = encodeURIComponent('Select *')
 const mime = 'text/x-mysql';
@@ -39,13 +39,13 @@ function hideSpinner()
 
 
 function createSqlSnippets(ele,sectionid){
-   
+    console.log(jsondataquery)
     var data=jsondataquery[sectionid]
-    var prevsection=sessionStorage.getItem('current-section');
+    var prevsection=sessionStorage.getItem('current-section'+sheetId);
     var prevele=document.getElementById(storagesectionid+prevsection);
     prevele.classList.remove("active");
     ele.classList.add("active");
-    sessionStorage.setItem('current-section', sectionid);
+    sessionStorage.setItem('current-section'+sheetId, sectionid);
     document.getElementById("section-heading").innerHTML=data.name
     document.getElementById("section-description").innerHTML=data.description
     maindiv=document.getElementById("maincontainer");
@@ -91,12 +91,11 @@ function createSqlSnippets(ele,sectionid){
 }
 
 function sqlCodeSubmit(id){
-    console.log(jsondataquery)
-   console.log(jsondataquery[sessionStorage.getItem('current-section')]['snippets'][id].Result)
+
     showSpinner();
     var resultContainer = document.getElementById("divResultSQL-"+id);
     resultContainer.innerHTML = "";
-    var existing_result=jsondataquery[sessionStorage.getItem('current-section')]['snippets'][id].Result
+    var existing_result=jsondataquery[sessionStorage.getItem('current-section'+sheetId)]['snippets'][id].Result
     if(existing_result){
         txt = "";
         txt = txt + "<div style='padding:10px;'><div style='margin-bottom:10px;'>Number of Records: " + 1 + "</div>";
@@ -137,7 +136,13 @@ function sqlCodeSubmit(id){
     sqlcode=sqlcode.replace(/[\u200B-\u200D\uFEFF]/g, '');
     statement_type=sqlcode.split(" ")[0].toLowerCase();
     console.log(sqlcode)
+    var type=jsondataquery[sessionStorage.getItem('current-section'+sheetId)]['snippets'][id].Type
+    if (type=='mongo'){
+        var REST_CALL = "/mongoTutorialCode";
+    }
+    else{
     var REST_CALL = "/sqlTutorialCode";
+    }
     var sendData={"sqlcode":sqlcode}
     $.ajax({
         url: REST_CALL,
@@ -145,6 +150,15 @@ function sqlCodeSubmit(id){
         type: 'POST',
         contentType: "application/json",
         success: function(result) {
+            console.log(result)
+            if (type=='mongo'){
+                txt = "";
+                txt = txt + "<div style='padding:10px;'><div style='margin-bottom:10px;'>Number of Records: " + result['result'].length+ "</div>";
+                txt=txt+"<div style='margin-bottom:10px;'>Execution Time: " + parseFloat(result['execution']).toFixed(3) + " seconds</div>"
+                resultContainer.innerHTML = txt + '<div class="" style="height:600px;overflow-y: auto;"><pre>' + JSON.stringify(result['result'], null, 4) + '</pre></div>';
+                hideSpinner()
+                return
+            }
             res=result['result']
             var len=parseInt(res.length)
             cols=[]
@@ -216,7 +230,6 @@ async function fetchGoogleSheetsData(url,type){
 }
 
 function createSectionJson(data_rows,data_cols){
-    console.log(data_rows)
     for(let i=0;i<data_rows.length;i++){
         var details=data_rows[i].c
         var sectionid=details[0].v
@@ -267,11 +280,12 @@ function createSectionLHS(){
     var licurrent;
     var parentul=document.getElementById("sql-sections");
     for (const [key, value] of Object.entries(jsondataquery)) {
+        console.log(value)
         let li=document.createElement("li");
-        if(!("current-section" in sessionStorage)|| sessionStorage.getItem("current-section")==key){
+        if(!("current-section"+sheetId in sessionStorage)|| sessionStorage.getItem("current-section"+sheetId)==key){
             li.setAttribute("class","chapter active");
             licurrent=li;
-            sessionStorage.setItem('current-section',key);
+            sessionStorage.setItem('current-section'+sheetId,key);
 
         }
         let a=document.createElement("a");
@@ -308,25 +322,3 @@ function toggleLHS(ele){
     }
 }
 
-
-function login() {
-    var pass1="letmein";
-
-    $('#loginModal').modal('show');
-
-
-    $("#loginForm").submit(function(event) {
-      event.preventDefault(); 
-      var password = $("#modalpass").val(); 
-  
-      if (password == pass1){
-        console.log("hellooo")
-        $('#loginModal').modal('hide');
-           return 1
-      }
-      else {
-        $('#loginModal').modal('hide');
-        return 0
-      }
-    });
-  }

@@ -4,11 +4,17 @@ import pymysql
 import time
 from flask.json import JSONEncoder
 import decimal
+import pymongo
+from bson import ObjectId
+from pymongo import MongoClient
+
 
 class JsonEncoder(JSONEncoder):
     def default(self, obj):
         if isinstance(obj, decimal.Decimal):
             return float(obj)
+        if isinstance(obj, ObjectId):
+            return str(obj)
         return JSONEncoder.default(self, obj)
 
 
@@ -22,9 +28,9 @@ application.json_encoder = JsonEncoder
 def sqlsnippet():
     return render_template("sqlSnippet.html")
 
-# @application.route('/codeSnippet', methods=['GET'])
-# def codeSnippet():
-#     return render_template("codeSnippet.html")
+@application.route('/codeSnippet', methods=['GET'])
+def codeSnippet():
+    return render_template("codeSnippet.html")
 
 # @application.route('/codemirror', methods=['GET'])
 # def codemirror():
@@ -65,24 +71,32 @@ def sqlTutorialCode():
     return jsonify({"result":details,"cols":field_names,"error":error,"execution":execution_time})
 
 
+@application.route('/mongoTutorialCode', methods=['POST'])
+def mongoTutorialCode():
+    data=request.get_json()
+    sqlcode=data["sqlcode"]
+    db=getMongoDbConnection()
+    print("got connection")
+    start_time = time.time()
+    x=eval(sqlcode)
+    end_time=time.time()
+    execution_time=end_time-start_time
+    print(execution_time)
+    res=[]
+    if(type(x) is pymongo.cursor.Cursor): 
+        for val in x:
+            res.append(val)
+    else:
+         res.append(x)
+    return jsonify({"result":res,"execution":execution_time})
 
-# @application.route('/login', methods=['POST'])
-# def login():
-#     data=request.get_json()
-#     password=data["password"]
-#     if(password=='letmein'):
-#         return jsonify({"result":'true'})
-#     else:
-#          return jsonify({"result":'false'})
-    
-
-# @application.route('/publish', methods=['POST'])
-# def publish_access():
-#     data=request.get_json()
-#     global publish
-#     publish=data["publish"]
-#     print(publish)
-#     return {}
+def getMongoDbConnection():
+    client = MongoClient('mongodb+srv://db-mongodb-nyc1-62083-a7614619.mongo.ondigitalocean.com',
+                     username='Student',
+                     password='L46xyu97Zfj0O215')
+    # myclient = pymongo.MongoClient("mongodb+srv://db-mongodb-nyc1-62083-a7614619.mongo.ondigitalocean.com")
+    mydb = client["Mongo336"]
+    return mydb
 
 
 def getSqlConnection():
