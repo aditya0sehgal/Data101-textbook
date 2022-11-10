@@ -100,13 +100,13 @@ def mongoTutorialCode():
     return jsonify(json.dumps({"result":res,"execution":execution_time},cls=JsonEncoder))
 
 def getMongoDbConnection():
-    # client = MongoClient('mongodb+srv://db-mongodb-nyc1-62083-a7614619.mongo.ondigitalocean.com',
-    #                  username='Student',
-    #                  password='L46xyu97Zfj0O215')
-    client=MongoClient('mongodb://localhost:27017')
+    client = MongoClient('mongodb+srv://db-mongodb-nyc1-62083-a7614619.mongo.ondigitalocean.com',
+                     username='Student',
+                     password='L46xyu97Zfj0O215')
+    # client=MongoClient('mongodb://localhost:27017')
     # myclient = pymongo.MongoClient("mongodb+srv://db-mongodb-nyc1-62083-a7614619.mongo.ondigitalocean.com")
-    # mydb = client["Mongo336"]
-    mydb=client['livenosql']
+    mydb = client["Mongo336"]
+    # mydb=client['livenosql']
     return mydb
 
 
