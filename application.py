@@ -85,7 +85,7 @@ def mongoTutorialCode():
     execution_time=end_time-start_time
     print(execution_time)
     res=[]
-    if(type(x) is pymongo.cursor.Cursor): 
+    if(type(x) is pymongo.cursor.Cursor or type(x) is pymongo.command_cursor.CommandCursor): 
         for val in x:
             res.append(val)
     elif type(x) is pymongo.results.InsertOneResult:
