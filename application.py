@@ -16,7 +16,7 @@ class JsonEncoder(JSONEncoder):
             return float(obj)
         if isinstance(obj, ObjectId):
             return str(obj)
-        return JSONEncoder.default(self, obj)
+        return json_util.default(obj)
 
 
 application = Flask(__name__)
@@ -80,6 +80,7 @@ def mongoTutorialCode():
     print("got connection")
     start_time = time.time()
     x=eval(sqlcode)
+    print(x)
     end_time=time.time()
     execution_time=end_time-start_time
     print(execution_time)
@@ -87,16 +88,25 @@ def mongoTutorialCode():
     if(type(x) is pymongo.cursor.Cursor): 
         for val in x:
             res.append(val)
+    elif type(x) is pymongo.results.InsertOneResult:
+        res.append({"_id":x.inserted_id})
+    elif type(x) is pymongo.results.InsertManyResult:
+        for val in x.inserted_ids:
+            res.append({"_id":val})
+    elif type(x) is pymongo.results.UpdateResult:
+        res.append({"ok":1})
     else:
          res.append(x)
-    return jsonify(json_util.dumps({"result":res,"execution":execution_time}))
+    return jsonify(json.dumps({"result":res,"execution":execution_time},cls=JsonEncoder))
 
 def getMongoDbConnection():
-    client = MongoClient('mongodb+srv://db-mongodb-nyc1-62083-a7614619.mongo.ondigitalocean.com',
-                     username='Student',
-                     password='L46xyu97Zfj0O215')
+    # client = MongoClient('mongodb+srv://db-mongodb-nyc1-62083-a7614619.mongo.ondigitalocean.com',
+    #                  username='Student',
+    #                  password='L46xyu97Zfj0O215')
+    client=MongoClient('mongodb://localhost:27017')
     # myclient = pymongo.MongoClient("mongodb+srv://db-mongodb-nyc1-62083-a7614619.mongo.ondigitalocean.com")
-    mydb = client["Mongo336"]
+    # mydb = client["Mongo336"]
+    mydb=client['livenosql']
     return mydb
 
 
