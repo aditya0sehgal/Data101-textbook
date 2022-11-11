@@ -39,7 +39,7 @@ function hideSpinner()
 
 
 function createSqlSnippets(ele,sectionid){
-    console.log(jsondataquery)
+    // console.log(jsondataquery)
     var data=jsondataquery[sectionid]
     var prevsection=sessionStorage.getItem('current-section'+sheetId);
     var prevele=document.getElementById(storagesectionid+prevsection);
@@ -62,7 +62,7 @@ function createSqlSnippets(ele,sectionid){
         txt=txt+"<h3>"+parseInt(i+1)+". " + snippetdata[i].Title +"</h3>"
         txt=txt+"<textarea id='textarea-"+i+"' wrap='logical' style='display: none;'>"+snippetdata[i].Query+"</textarea>"
         txt=txt+"<p>Edit the SQL Statement, and click Run SQL to see the result.</p>"
-        txt=txt+"<button class='ws-btn' type='button' onclick='sqlCodeSubmit("+i+");'>Run SQL »</button>" + "<h3>Result:</h3>" 
+        txt=txt+"<button class='ws-btn' type='button' onclick='sqlCodeSubmit("+i+");'>Run Query »</button>" + "<h3>Result:</h3>" 
         txt=txt+"<div id='resultSQL-"+i+"'>"+
         "<div class='w3-white' id='divResultSQL-"+i+"' style='display: block; padding:10px;'>"+
         "  Results will be displayed here" + 
@@ -96,7 +96,16 @@ function sqlCodeSubmit(id){
     var resultContainer = document.getElementById("divResultSQL-"+id);
     resultContainer.innerHTML = "";
     var existing_result=jsondataquery[sessionStorage.getItem('current-section'+sheetId)]['snippets'][id].Result
+    var type=jsondataquery[sessionStorage.getItem('current-section'+sheetId)]['snippets'][id].Type
     if(existing_result){
+        if(type=='mongo'){
+            txt = "";
+            txt = txt + "<div style='padding:10px;'><div style='margin-bottom:10px;'>Number of Records: " + 1 + "</div>";
+            txt=txt+"<div style='margin-bottom:10px;'>Execution Time: " + 0.000012 + " seconds</div>"
+            resultContainer.innerHTML = txt + '<div class="" style="height:auto;max-height:600px;overflow-y: auto;"><pre>' + existing_result + '</pre></div>';
+            hideSpinner()
+            return
+        }
         txt = "";
         txt = txt + "<div style='padding:10px;'><div style='margin-bottom:10px;'>Number of Records: " + 1 + "</div>";
         txt=txt+"<div style='margin-bottom:10px;'>Execution Time: " + 0.05 + " seconds</div>"
@@ -135,7 +144,6 @@ function sqlCodeSubmit(id){
     sqlcode=sqlcode.replace(/\s\s+/g, ' ')
     sqlcode=sqlcode.replace(/[\u200B-\u200D\uFEFF]/g, '');
     statement_type=sqlcode.split(" ")[0].toLowerCase();
-    console.log(sqlcode)
     var type=jsondataquery[sessionStorage.getItem('current-section'+sheetId)]['snippets'][id].Type
     if (type=='mongo'){
         var REST_CALL = "/mongoTutorialCode";
@@ -150,11 +158,10 @@ function sqlCodeSubmit(id){
         type: 'POST',
         contentType: "application/json",
         success: function(result) {
-            console.log(result)
+            // console.log(result)
             result=JSON.parse(result)
             if (type=='mongo'){
                 txt = "";
-                console.log(result['result'])
                 txt = txt + "<div style='padding:10px;'><div style='margin-bottom:10px;'>Number of Records: " + result['result'].length+ "</div>";
                 txt=txt+"<div style='margin-bottom:10px;'>Execution Time: " + parseFloat(result['execution']).toFixed(5) + " seconds</div>"
                 resultContainer.innerHTML = txt + '<div class="" style="height:auto;max-height:600px;overflow-y: auto;"><pre>' + JSON.stringify(result['result'], null, 4) + '</pre></div>';
@@ -238,7 +245,6 @@ function createSectionJson(data_rows,data_cols){
         if(!(sectionid in jsondataquery)){
             jsondataquery[sectionid]={}
         }
-        console.log(details)
         if(details[2]){
            jsondataquery[sectionid]["description"]=details[2].v
         } 
@@ -282,7 +288,6 @@ function createSectionLHS(){
     var licurrent;
     var parentul=document.getElementById("sql-sections");
     for (const [key, value] of Object.entries(jsondataquery)) {
-        console.log(value)
         let li=document.createElement("li");
         if(!("current-section"+sheetId in sessionStorage)|| sessionStorage.getItem("current-section"+sheetId)==key){
             li.setAttribute("class","chapter active");
