@@ -147,6 +147,11 @@ function sqlCodeSubmit(id){
     var type=jsondataquery[sessionStorage.getItem('current-section'+sheetId)]['snippets'][id].Type
     if (type=='mongo'){
         var REST_CALL = "/mongoTutorialCode";
+        if(sqlcode.includes("insert") || sqlcode.includes("update") || sqlcode.includes("delete")){
+            resultContainer.innerHTML='Please run the above query in the local workbench.'
+            hideSpinner();
+            return;
+        }
     }
     else{
     var REST_CALL = "/sqlTutorialCode";
