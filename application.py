@@ -29,13 +29,10 @@ application.json_encoder = JsonEncoder
 def sqlsnippet():
     return render_template("sqlSnippet.html")
 
-@application.route('/codeSnippet', methods=['GET'])
+@application.route('/datacamp', methods=['GET'])
 def codeSnippet():
-    return render_template("codeSnippet.html")
+    return render_template("datacamp.html")
 
-# @application.route('/codemirror', methods=['GET'])
-# def codemirror():
-#     return render_template("codemirror.html")
 
 @application.route('/sqlTutorialCode', methods=['POST'])
 def sqlTutorialCode():

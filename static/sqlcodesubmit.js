@@ -6,14 +6,33 @@ const mime = 'text/x-mysql';
 var jsondataquery={}
 const storagesectionid="section-id-";
 $(document).ready(function () {
-    scrollToTap()
+    init();
+    scrollToTap();
+
   });
 
   function scrollToTap(){
     $("#maincontent").scrollTop(0);
   }
 
+function testing_r(id){
+    // let maindiv=document.getElementById("maincontainer");
+    // var txt="";
+    // txt=txt+ '<div data-datacamp-exercise data-lang="r" data-show-run-button data-height="500">'+
+    // '<code data-type="pre-exercise-code"> </code>'+
+    // '<code data-type="sample-code">'+
+    // 'a<-5'+
+    // '</code>'+
+    // '<code data-type="solution"> </code>'+
+    // '<code data-type="sct"> </code>'+
+    // '<div data-type="hint"> </div>'+
+    // '</div>';
+    // var childiv=document.createElement("div");
+    // childiv.setAttribute("id","example-"+id);
+    // childiv.innerHTML=txt;
+    // maindiv.append(childiv);
 
+}
 function showSpinner() 
 {
     let spinner = document.getElementById("spinner");
@@ -37,15 +56,24 @@ function hideSpinner()
     waiting.style.display="none";
 }
 
-
-function createSqlSnippets(ele,sectionid){
-    // console.log(jsondataquery)
-    var data=jsondataquery[sectionid]
+function set_storage_section(ele,sectionid){
     var prevsection=sessionStorage.getItem('current-section'+sheetId);
     var prevele=document.getElementById(storagesectionid+prevsection);
     prevele.classList.remove("active");
     ele.classList.add("active");
     sessionStorage.setItem('current-section'+sheetId, sectionid);
+    location.reload();
+}
+
+function createSqlSnippets(sectionid){
+
+    console.log(jsondataquery)
+    var data=jsondataquery[sectionid]
+    // var prevsection=sessionStorage.getItem('current-section'+sheetId);
+    // var prevele=document.getElementById(storagesectionid+prevsection);
+    // prevele.classList.remove("active");
+    // ele.classList.add("active");
+    // sessionStorage.setItem('current-section'+sheetId, sectionid);
     document.getElementById("section-heading").innerHTML=data.name
     document.getElementById("section-description").innerHTML=data.description
     maindiv=document.getElementById("maincontainer");
@@ -56,7 +84,23 @@ function createSqlSnippets(ele,sectionid){
     }
     var snippetdata=data.snippets
     for(let i=0;i<snippetdata.length;i++){
-
+        if(snippetdata[i].Type == 'R'){
+            var txt="";
+            txt=txt+ '<div data-datacamp-exercise data-lang="r" data-show-run-button data-height="500">'+
+            '<code data-type="pre-exercise-code"> </code>'+
+            '<code data-type="sample-code">'+
+            snippetdata[i].Query+
+            '</code>'+
+            '<code data-type="solution"> </code>'+
+            '<code data-type="sct"> </code>'+
+            '<div data-type="hint"> </div>'+
+            '</div>';
+            var childiv=document.createElement("div");
+            childiv.setAttribute("id","example-"+i);
+            childiv.innerHTML=txt;
+            maindiv.append(childiv);
+            continue
+        }
         txt="";
         txt=txt + "<div class='ws-grey' style='padding:15px;padding-bottom:40px;margin-bottom:0px;box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);'>"
         txt=txt+"<h3>"+parseInt(i+1)+". " + snippetdata[i].Title +"</h3>"
@@ -87,6 +131,7 @@ function createSqlSnippets(ele,sectionid){
           extraKeys: {"Ctrl-Space": "autocomplete"}
         });
     }
+    initAddedDCLightExercises();
     scrollToTap()
 }
 
@@ -291,6 +336,7 @@ function createSqlJson(data_rows,data_cols){
 
 function createSectionLHS(){
     var licurrent;
+    var current_key;
     var parentul=document.getElementById("sql-sections");
     for (const [key, value] of Object.entries(jsondataquery)) {
         let li=document.createElement("li");
@@ -298,10 +344,10 @@ function createSectionLHS(){
             li.setAttribute("class","chapter active");
             licurrent=li;
             sessionStorage.setItem('current-section'+sheetId,key);
-
+            current_key=key
         }
         let a=document.createElement("a");
-        li.setAttribute("onclick","createSqlSnippets(this,'"+key+"');")
+        li.setAttribute("onclick","set_storage_section(this,'"+key+"');")
         li.setAttribute("id",storagesectionid+key)
         let i=document.createElement("i");
         i.setAttribute("class","fa fa-check");
@@ -314,7 +360,7 @@ function createSectionLHS(){
         li.append(a)
         parentul.append(li);
       }
-      licurrent.click();
+      createSqlSnippets(current_key);
 }
 
 

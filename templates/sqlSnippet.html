@@ -29,7 +29,8 @@
     <script src="/static/show-hint.js"></script>
     <script src="/static/sql-hint.js"></script>
     <script type="text/javascript" src="/static/sqlcodesubmit.js"></script>
-
+    <script type="text/javascript" src="//cdn.datacamp.com/dcl-react.js.gz"></script>
+    
     <link rel="stylesheet" href="/static/w3schools.css">
     <link rel="stylesheet" href="/static/codemirror.css">
     <link rel="stylesheet" href="/static/lhs.css">
@@ -38,7 +39,7 @@
 	
     
 </head>
-<body  onload="init();">
+<body  onload="">
     <a class="toggle-bar" onclick="toggleLHS(this)" href="#"><i class="fa fa-align-justify"></i></a>
     <div id="mainbody" class="book font-size-2 font-family-1 with-summary">
         <div class="book-summary">
@@ -54,6 +55,12 @@
 	    <div id="maincontent" class="book-body fixed">
             <h2 id="section-heading"></h2>
             <p id="section-description"></p>
+            <!-- <div id="test1">
+
+            </div>
+            <div id="test2">
+
+            </div> -->
             <div id="maincontainer">
             </div>
 		
@@ -64,6 +71,22 @@
 </div>
 
 </body>
+<script>
+    //testing_r(1);
+    
+    /*let testdiv=document.getElementById("test1");
+    var txt="";
+    txt=txt+ '<div data-datacamp-exercise data-lang="r" data-show-run-button data-no-lazy-loading data-height="500">'+
+    '<code data-type="pre-exercise-code"> </code>'+
+    '<code data-type="sample-code">'+
+    'a<-5'+
+    '</code>'+
+    '<code data-type="solution"> </code>'+
+    '<code data-type="sct"> </code>'+
+    '<div data-type="hint"> </div>'+
+    '</div>';
+    testdiv.innerHTML=txt;*/
+</script>
 </html>
 
 
