@@ -101,6 +101,23 @@ function createSqlSnippets(sectionid){
             maindiv.append(childiv);
             continue
         }
+        else if(snippetdata[i].Type == 'Python'){
+            var txt="";
+            txt=txt+ '<div data-datacamp-exercise data-lang="python" data-show-run-button data-height="500">'+
+            '<code data-type="pre-exercise-code"> </code>'+
+            '<code data-type="sample-code">'+
+            snippetdata[i].Query+
+            '</code>'+
+            '<code data-type="solution"> </code>'+
+            '<code data-type="sct"> </code>'+
+            '<div data-type="hint"> </div>'+
+            '</div>';
+            var childiv=document.createElement("div");
+            childiv.setAttribute("id","example-"+i);
+            childiv.innerHTML=txt;
+            maindiv.append(childiv);
+            continue
+        }
         txt="";
         txt=txt + "<div class='ws-grey' style='padding:15px;padding-bottom:40px;margin-bottom:0px;box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);'>"
         txt=txt+"<h3>"+parseInt(i+1)+". " + snippetdata[i].Title +"</h3>"
