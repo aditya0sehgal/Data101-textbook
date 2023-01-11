@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>HTML Editor</title>
+    <link rel="shortcut icon" href="#">
+
+	<link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" type="text/css" media="all" title="no title" charset="utf-8"/>
+	
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" />
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/jodit/3.24.2/jodit.es2018.min.css"
+/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jodit/3.24.2/jodit.es2018.min.js"></script>
+
+
+
+	
+    
+</head>
+<body >
+<div class="container">
+    HTML Editor!
+    <p>Convert your text to html code</p>
+    <textarea id="editor" name="editor"></textarea>
+
+    <br>
+    <br>
+<button onclick="copyContent()">
+    COPY HTML OF ABOVE TEXT
+</button>
+</div>
+
+
+
+<!-- <div id="summernote">Hello Summernote</div> -->
+
+</body>
+<script>
+/*    $(document).ready(function() {
+        $('#summernote').summernote();
+      }); */
+    var editor = Jodit.make('#editor');
+    editor.value = '<p>start</p>'; 
+</script>
+<script>
+    const copyContent = async () => {
+    let text = editor.getEditorValue();
+      try {
+        await navigator.clipboard.writeText(text);
+        console.log('Content copied to clipboard');
+      } catch (err) {
+        console.error('Failed to copy: ', err);
+      }
+    }
+  </script>
+</html>
+
+
+
+
+
+
+ 
+          

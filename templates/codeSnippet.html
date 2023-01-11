@@ -1,0 +1,211 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>SQL Live Snippets</title>
+    <link rel="shortcut icon" href="#">
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
+	<link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" type="text/css" media="all" title="no title" charset="utf-8"/>
+	
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.2.0/jszip.min.js"></script>
+    <script src="https://cdn.zinggrid.com/zinggrid.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="/static/codemirror-1.css">
+    <link rel="stylesheet" href="/static/docs.css">
+    
+    <link rel="stylesheet" href="/static/codemirror-1.css">
+    <link rel="stylesheet" href="/static/show-hint.css">
+    <script src="/static/codemirror.js"></script>
+    <script src="/static/matchbrackets.js"></script>
+    <script src="/static/sql.js"></script>
+    <script src="/static/show-hint.js"></script>
+    <script src="/static/sql-hint.js"></script>
+    <script type="text/javascript" src="/static/sqlcodesubmit.js"></script>
+
+    <link rel="stylesheet" href="/static/w3schools.css">
+    <link rel="stylesheet" href="/static/codemirror.css">
+    <link rel="stylesheet" href="/static/lhs.css">
+
+	
+	<style>
+        
+    body {font-family:'Open Sans';}
+    .ws-btn{
+        background-color: black;
+    }
+    .ws-grey{
+    background-color:rgb(231, 233, 235) !important
+    }
+    #maincontainer{
+        display: none;
+    }
+    .book-body{
+        padding-left: 25px;
+        padding-right: 25px;
+        padding-top: 10px;
+    }
+    #section-description{
+        font-size: 20px;
+    }
+    .toggle-bar{
+        position: absolute !important;
+        padding: 0px !important;
+        left: 270px;
+        top: 12px;
+        z-index: 9;
+        outline: none !important;
+    }
+    .toggle-bar:hover {
+        color: #008cff;
+    }
+    .lhs-heading-menu{
+        display: flex;
+    }
+	</style>
+</head>
+<body>
+    <!-- <div>
+        <div class='ws-grey' style='padding:15px;padding-bottom:40px;margin-bottom:40px;box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);'>
+            <h3>Hellooo</h3>
+            <textarea rows="10" name="sql" id="sqlstatements" placeholder="Write Sql Query..." style="width:100%;resize: none;"></textarea>
+            <p>Edit the SQL Statement, and click Run SQL to see the result.</p>
+            <button class='ws-btn' type='button'>Run SQL »</button>
+            <h3>Result:</h3>
+            <div id='resultSQL-"+i+"'>" + "<iframe id='iframeResultSQL-"+i+"' frameborder='0' name='view' style='display: none;'></iframe>
+            <div class='w3-white' id='divResultSQL-"+i+"' style='display: block; padding:10px;'>" + "  Results will be displayed here </div> </div>
+        </div>
+    </div> -->
+
+    <div class="ws-grey" id="test" style="padding:15px;padding-bottom:40px;margin-bottom:40px;box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);">
+          <h3>SQL Statement:</h3>
+          <textarea id="textareaCodeSQL" wrap="logical" style="display: none;">SELECT * FROM Customers;
+            </textarea>
+            <button class="ws-btn" type="button" onclick="test('yo1');">Run SQL »</button>
+            <button class="ws-btn" type="button" onclick="test('yo');">Running SQL »</button>
+    </div>
+
+
+    <table id="table_id" class="display">
+    </table>
+    
+
+    <script>
+        $(document).ready( function () {
+            var cols=[{title: 'name'},{title:'manf'}]
+            var res=[
+    [
+        "Bud",
+        "Anheuser-Busch"
+    ],
+    [
+        "Budweiser",
+        "Anheuser-Busch"
+    ],
+    [
+        "Michelob Amber Bock",
+        "Anheuser-Busch"
+    ],
+    [
+        "Michelob Golden Draft",
+        "Anheuser-Busch"
+    ],
+    [
+        "Michelob Golden Draft Light",
+        "Anheuser-Busch"
+    ],
+    [
+        "Michelob ULTRA",
+        "Anheuser-Busch"
+    ]
+]
+console.log(res)
+            $('#table_id').DataTable({
+                paging: false,
+                data:res,
+                columns:cols
+            });
+        } );
+    </script>
+    <script>
+        window.onload = function() {
+          var mime = 'text/x-mysql';
+          var textarea=document.createElement("textarea");
+          textarea.innerHTML="SELECT * FROM Beers\norder by people"
+          textarea.setAttribute("wrap","logical");
+          textarea.setAttribute("id","testing");
+          textarea.setAttribute("style","display:none");
+          var cont=document.getElementById("test");
+          cont.append(textarea);
+          var code=CodeMirror.fromTextArea(textarea, {
+            resultId:"yo",
+            mode: mime,
+            indentWithTabs: true,
+            smartIndent: true,
+            lineNumbers: false,
+            matchBrackets : true,
+            autofocus: true,
+            lineWrapping:true,
+            extraKeys: {"Ctrl-Space": "autocomplete"},
+            hintOptions: {tables: {
+              users: ["name", "score", "birthDate"],
+              countries: ["name", "population", "size"]
+            }}
+          });
+          console.log(code);
+          CodeMirror.fromTextArea(document.getElementById("textareaCodeSQL"), {
+            resultId:"yo1",
+            mode: mime,
+            indentWithTabs: true,
+            smartIndent: true,
+            lineNumbers: false,
+            matchBrackets : true,
+            autofocus: true,
+            lineWrapping:true,
+            extraKeys: {"Ctrl-Space": "autocomplete"},
+            hintOptions: {tables: {
+              users: ["name", "score", "birthDate"],
+              countries: ["name", "population", "size"]
+            }}
+          });
+        };
+        </script>
+
+        <script>
+            function test(id){
+                var ans=''
+                var ele=document.getElementById(id);
+                
+                var cloned=ele.cloneNode(true);
+                var elements = cloned.getElementsByClassName('cm-comment');
+                while(elements.length > 0){
+                    elements[0].parentNode.removeChild(elements[0]);
+                }
+                let allele=cloned.getElementsByClassName("CodeMirror-line");
+                for(let i=0;i<allele.length;i++){
+                    ans=ans+allele[i].innerText+' ';
+                }
+                console.log(ans.replace(/\s\s+/g, ' '))
+                //console.log(cloned)
+               /* sqlcode=cloned.innerHTML;
+                sqlcode=sqlcode.replaceAll("&nbsp;"," ");
+                var div = document.createElement("div");
+                div.innerHTML = sqlcode;
+                sqlcode = div.textContent || div.innerText || "";
+                console.log(sqlcode)*/
+            }
+        </script>
+        
+</body>
+</html>
+
+
+
+
+
+
+ 
+          

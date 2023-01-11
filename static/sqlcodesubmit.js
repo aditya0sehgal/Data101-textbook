@@ -69,11 +69,7 @@ function createSqlSnippets(sectionid){
 
     console.log(jsondataquery)
     var data=jsondataquery[sectionid]
-    // var prevsection=sessionStorage.getItem('current-section'+sheetId);
-    // var prevele=document.getElementById(storagesectionid+prevsection);
-    // prevele.classList.remove("active");
-    // ele.classList.add("active");
-    // sessionStorage.setItem('current-section'+sheetId, sectionid);
+
     document.getElementById("section-heading").innerHTML=data.name
     document.getElementById("section-description").innerHTML=data.description
     maindiv=document.getElementById("maincontainer");
