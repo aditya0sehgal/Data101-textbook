@@ -23,18 +23,24 @@ application = Flask(__name__)
 CORS(application)
 application.json_encoder = JsonEncoder
 # publish = False
- 
 
 @application.route('/', methods=['GET'])
-def sqlsnippet():
-    return render_template("sqlSnippet.html")
+def home():
+    return render_template("home.html")
 
+@application.route('/sql', methods=['GET'])
+def sqlsnippet():
+    return render_template("sqlSnippet.html", value = '1Iu-zCunodM-l1xH1sU50Huf6BDWoBBBG7xd_7u8plgk', title = 'SQL Live Coding Tutorial Book')
+
+@application.route('/R', methods=['GET'])
+def rsnippet():
+    return render_template("sqlSnippet.html", value = '1g4SFwZuRTO5-4uRuNN_pz3UQaqEoDUMXk0QjTFophJk', title = 'R Live Coding Tutorial Book')
 # @application.route('/datacamp', methods=['GET'])
 # def codeSnippet():
 #     return render_template("datacamp.html")
 @application.route('/htmleditor', methods=['GET'])
 def codeSnippet():
-    return render_template("htmleditor.html")
+    return render_template("datacamp.html")
 
 
 @application.route('/sqlTutorialCode', methods=['POST'])

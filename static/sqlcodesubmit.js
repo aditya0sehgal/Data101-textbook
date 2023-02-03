@@ -1,4 +1,4 @@
-const sheetId = '1Iu-zCunodM-l1xH1sU50Huf6BDWoBBBG7xd_7u8plgk';
+
 // const sheetId='12iRkOmBHaahLrLbBLvqnzSKzWOsO1xHEQckGvXNpD-o'
 const base = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?`;
 const query = encodeURIComponent('Select *')

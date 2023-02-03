@@ -8,7 +8,10 @@
     <link rel="shortcut icon" href="#">
 
 	<link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" type="text/css" media="all" title="no title" charset="utf-8"/>
-	
+    <script>
+        const sheetId = '{{value}}';
+
+    </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.2.0/jszip.min.js"></script>
 
@@ -37,7 +40,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.css"/>
     <link rel="stylesheet" href="/static/main.css">
 	
-    
+
 </head>
 <body  onload="">
     <a class="toggle-bar" onclick="toggleLHS(this)" href="#"><i class="fa fa-align-justify"></i></a>
@@ -45,7 +48,7 @@
         <div class="book-summary">
             <nav role="navigation">
                 <ul class="summary" id="sql-sections">
-                <li class="lhs-heading-menu"><a href="./">SQL Live Coding Tutorial Book</a>
+                <li class="lhs-heading-menu"><a href="./">{{title}}</a>
                 </li>
                 <li class="divider"></li>    
                 </ul>
