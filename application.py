@@ -9,6 +9,7 @@ from bson import ObjectId
 from pymongo import MongoClient
 import bson.json_util as json_util
 import json
+import pandas as pd
 
 class JsonEncoder(JSONEncoder):
     def default(self, obj):
@@ -40,7 +41,22 @@ def rsnippet():
 #     return render_template("datacamp.html")
 @application.route('/htmleditor', methods=['GET'])
 def codeSnippet():
-    return render_template("datacamp.html")
+    sheet_id = '1Iu-zCunodM-l1xH1sU50Huf6BDWoBBBG7xd_7u8plgk'
+    url = 'https://docs.google.com/spreadsheets/d/'+sheet_id+'/gviz/tq?tqx=out:csv&sheet=Sheet1'
+    df=pd.read_csv(url)
+
+    url = 'https://docs.google.com/spreadsheets/d/'+sheet_id+'/gviz/tq?tqx=out:csv&sheet=Sheet2'
+    df1=pd.read_csv(url)
+
+    finaldf=pd.merge(df1, df, on="Section")
+
+    cols = finaldf.columns.difference(['Section','Name','Details'])
+    d = (finaldf.groupby(['Section','Name','Details'])[cols]
+            .apply(lambda x: x.to_dict(orient='records'))
+            .reset_index(name='Snippets')
+            .to_json(orient='records'))
+
+    return render_template("datacamp.html",value=d)
 
 
 @application.route('/sqlTutorialCode', methods=['POST'])
