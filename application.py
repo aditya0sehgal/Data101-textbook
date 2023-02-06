@@ -48,7 +48,7 @@ def codeSnippet():
     url = 'https://docs.google.com/spreadsheets/d/'+sheet_id+'/gviz/tq?tqx=out:csv&sheet=Sheet2'
     df1=pd.read_csv(url)
 
-    finaldf=pd.merge(df1, df, on="Section")
+    finaldf=pd.merge(df1, df, on="Section" , how = "outer")
 
     cols = finaldf.columns.difference(['Section','Name','Details'])
     d = (finaldf.groupby(['Section','Name','Details'])[cols]

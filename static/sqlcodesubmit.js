@@ -6,9 +6,12 @@ const mime = 'text/x-mysql';
 var jsondataquery={}
 const storagesectionid="section-id-";
 $(document).ready(function () {
+    console.log("helllo")
     init();
+    console.log("helllo1")
     scrollToTap();
-
+    initAddedDCLightExercises();
+    console.log("helllo2")
   });
 
   function scrollToTap(){
@@ -65,7 +68,7 @@ function set_storage_section(ele,sectionid){
     location.reload();
 }
 
-function createSqlSnippets(sectionid){
+async function createSqlSnippets(sectionid){
 
     console.log(jsondataquery)
     var data=jsondataquery[sectionid]
@@ -79,8 +82,10 @@ function createSqlSnippets(sectionid){
         return;
     }
     var snippetdata=data.snippets
+    
     for(let i=0;i<snippetdata.length;i++){
         if(snippetdata[i].Type == 'R'){
+            
             var txt="";
             txt=txt+ '<div data-datacamp-exercise data-lang="r" data-show-run-button data-height="500">'+
             '<code data-type="pre-exercise-code"> </code>'+
@@ -95,6 +100,7 @@ function createSqlSnippets(sectionid){
             childiv.setAttribute("id","example-"+i);
             childiv.innerHTML=txt;
             maindiv.append(childiv);
+            
             continue
         }
         else if(snippetdata[i].Type == 'Python'){

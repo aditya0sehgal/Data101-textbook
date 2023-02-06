@@ -32,7 +32,7 @@
     <script src="/static/show-hint.js"></script>
     <script src="/static/sql-hint.js"></script>
     <script type="text/javascript" src="/static/sqlcodesubmit.js"></script>
-    <script type="text/javascript" src="//cdn.datacamp.com/dcl-react.js.gz"></script>
+
     
     <link rel="stylesheet" href="/static/w3schools.css">
     <link rel="stylesheet" href="/static/codemirror.css">
@@ -40,12 +40,22 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.css"/>
     <link rel="stylesheet" href="/static/main.css">
 	
-
+<style>
+    .rhs{
+        width: 80%;
+/* float: right; */
+margin: 0 0 auto auto;
+padding : 20px;
+    }
+</style>
 </head>
 <body  onload="">
-    <a class="toggle-bar" onclick="toggleLHS(this)" href="#"><i class="fa fa-align-justify"></i></a>
+    <!-- <a class="toggle-bar" onclick="toggleLHS(this)" href="#"><i class="fa fa-align-justify"></i></a> -->
     <div id="mainbody" class="book font-size-2 font-family-1 with-summary">
-        <div class="book-summary">
+        <div class="book-summary" style="width: 20%;  position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;height: 100%;  overflow-x: hidden;">
             <nav role="navigation">
                 <ul class="summary" id="sql-sections">
                 <li class="lhs-heading-menu"><a href="./">{{title}}</a>
@@ -55,7 +65,7 @@
             </nav>
         </div>
 
-	    <div id="maincontent" class="book-body fixed">
+	    <div id="maincontent" class="rhs fixed">
             <h2 id="section-heading"></h2>
             <p id="section-description"></p>
             <div id="maincontainer">
@@ -68,7 +78,7 @@
 </div>
 
 </body>
-
+<script type="text/javascript" src="//cdn.datacamp.com/dcl-react.js.gz"></script>
 </html>
 
 
