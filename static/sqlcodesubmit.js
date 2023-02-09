@@ -86,7 +86,7 @@ async function createSqlSnippets(sectionid){
     for(let i=0;i<snippetdata.length;i++){
         if(snippetdata[i].Type == 'R'){
             
-            var txt="";
+            txt="<h3>"+parseInt(i+1)+". " + snippetdata[i].Title +"</h3>"
             txt=txt+ '<div data-datacamp-exercise data-lang="r" data-show-run-button data-height="500">'+
             '<code data-type="pre-exercise-code"> </code>'+
             '<code data-type="sample-code">'+
