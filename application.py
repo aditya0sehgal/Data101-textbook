@@ -29,17 +29,27 @@ application.json_encoder = JsonEncoder
 def home():
     return render_template("home.html")
 
+
+@application.route('/htmleditor', methods=['GET'])
+def htmleditor():
+    return render_template("htmleditor.html")
+
 @application.route('/sql', methods=['GET'])
 def sqlsnippet():
     return render_template("sqlSnippet.html", value = '1Iu-zCunodM-l1xH1sU50Huf6BDWoBBBG7xd_7u8plgk', title = 'SQL Live Coding Tutorial Book')
 
-@application.route('/R', methods=['GET'])
+@application.route('/Rdata101', methods=['GET'])
 def rsnippet():
     return render_template("sqlSnippet.html", value = '1g4SFwZuRTO5-4uRuNN_pz3UQaqEoDUMXk0QjTFophJk', title = 'R Live Coding Tutorial Book')
 # @application.route('/datacamp', methods=['GET'])
 # def codeSnippet():
 #     return render_template("datacamp.html")
-@application.route('/htmleditor', methods=['GET'])
+
+@application.route('/R', methods=['GET'])
+def main_r_page():
+    return render_template("main-r.html")
+
+@application.route('/datacamp', methods=['GET'])
 def codeSnippet():
     sheet_id = '1Iu-zCunodM-l1xH1sU50Huf6BDWoBBBG7xd_7u8plgk'
     url = 'https://docs.google.com/spreadsheets/d/'+sheet_id+'/gviz/tq?tqx=out:csv&sheet=Sheet1'
