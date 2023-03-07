@@ -18,7 +18,16 @@
     href="https://cdnjs.cloudflare.com/ajax/libs/jodit/3.24.2/jodit.es2018.min.css"
 />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jodit/3.24.2/jodit.es2018.min.js"></script>
-
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    }
+  };
+  </script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+  </script>
 
 
 	
@@ -33,8 +42,13 @@
     <br>
     <br>
 <button onclick="copyToClipboard()">
-    COPY HTML OF ABOVE TEXT
+    COPY HTML OF ABOVE TEXT AND SHOW PREVIEW
 </button>
+<br>
+<br>
+<div id="result">
+
+</div>
 </div>
 
 
@@ -48,6 +62,16 @@
       }); */
     var editor = Jodit.make('#editor');
     editor.value = '<p>start</p>'; 
+   /* setTimeout(() => {
+      editor.e.on('change', () => {console.log(editor.value); 
+      // document.getElementById("result").innerHTML=editor.value 
+      MathJax.typeset(() => {
+        const math = document.querySelector('#result');
+        math.innerHTML = editor.value;
+        return [math];
+      })});
+      
+  }, 1000);*/
 </script>
 <script>
     const copyContent = async () => {
@@ -64,6 +88,8 @@
   <script>
     function copyToClipboard() {
         let text = editor.getEditorValue();
+       document.getElementById("result").insertAdjacentHTML('beforeend',text)
+        MathJax.typeset()
         var dummy = document.createElement("textarea");
         // to avoid breaking orgain page when copying more words
         // cant copy when adding below this code

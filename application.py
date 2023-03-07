@@ -34,6 +34,11 @@ def home():
 def htmleditor():
     return render_template("htmleditor.html")
 
+
+@application.route('/latex', methods=['GET'])
+def latex():
+    return render_template("latex.html")
+
 @application.route('/sql', methods=['GET'])
 def sqlsnippet():
     return render_template("sqlSnippet.html", value = '1Iu-zCunodM-l1xH1sU50Huf6BDWoBBBG7xd_7u8plgk', title = 'SQL Live Coding Tutorial Book')
