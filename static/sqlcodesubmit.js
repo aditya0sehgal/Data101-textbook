@@ -63,7 +63,7 @@ async function createSqlSnippets(sectionid){
         document.getElementById("pptslides").style.display = 'none'
     }
     else{
-        document.getElementById("pptslides").innerHTML = '<iframe src="'+data.pptslides+'" frameborder="0" width="960" height="569" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>'
+        document.getElementById("pptslides").innerHTML = data.pptslides
         document.getElementById("pptslides").style.display = 'block'
     }
 
