@@ -1,5 +1,8 @@
 body {font-family:'Open Sans';
     background:white}
+    p{
+      margin : 0px !important
+    }
     .ws-btn{
         background-color: black;
     }
@@ -88,4 +91,46 @@ body {font-family:'Open Sans';
       
       #section-description{
         white-space: pre-line;
+        padding-bottom: 10px;
       }
+
+      .rhs{
+        width: 80%;
+/* float: right; */
+margin: 0 0 auto auto;
+padding : 40px;
+    }
+    #pptslides {
+        background: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100% 100%"><text fill="%23FF0000" x="50%" y="50%" font-family="\'Lucida Grande\', sans-serif" font-size="24" text-anchor="middle">PPT SLIDES</text></svg>') 0px 0px no-repeat;
+        text-align: center;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        display: none;
+    }
+    #section-heading{
+        font-weight:600;
+    }
+
+    /* Dashed border */
+hr.dashed {
+  border-top: 1px dashed #bbb;
+margin: 0px;
+padding-top: 10px;
+padding-bottom: 10px;
+}
+
+/* Dotted border */
+hr.dotted {
+  border-top: 3px dotted #bbb;
+}
+
+/* Solid border */
+hr.solid {
+  border-top: 3px solid #bbb;
+}
+
+/* Rounded border */
+hr.rounded {
+  border-top: 8px solid #bbb;
+  border-radius: 5px;
+}

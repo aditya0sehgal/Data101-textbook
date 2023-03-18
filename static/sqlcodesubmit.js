@@ -75,9 +75,18 @@ async function createSqlSnippets(sectionid){
 
     document.getElementById("section-heading").innerHTML=data.name
     document.getElementById("section-description").innerHTML=data.description
+    if(data.pptslides == ''){
+        document.getElementById("pptslides").innerHTML = ''
+        document.getElementById("pptslides").style.display = 'none'
+    }
+    else{
+        document.getElementById("pptslides").innerHTML = '<iframe src="'+data.pptslides+'" frameborder="0" width="960" height="569" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>'
+        document.getElementById("pptslides").style.display = 'block'
+    }
+
     maindiv=document.getElementById("maincontainer");
     maindiv.style.display="block";
-    maincontainer.innerHTML=" ";
+    maincontainer.innerHTML='';
     if(!("snippets" in data)){
         return;
     }
@@ -151,7 +160,7 @@ async function createSqlSnippets(sectionid){
         });
     }
     initAddedDCLightExercises();
-    MathJax.typeset()
+    // MathJax.typeset()
     scrollToTap()
 }
 
@@ -321,6 +330,12 @@ function createSectionJson(data_rows,data_cols){
         else{
             jsondataquery[sectionid]["description"]=""
         }
+        if(details[3]){
+            jsondataquery[sectionid]["pptslides"]=details[3].v
+         } 
+         else{
+             jsondataquery[sectionid]["pptslides"]=""
+         }
         jsondataquery[sectionid]["name"]=details[1].v
         
     }

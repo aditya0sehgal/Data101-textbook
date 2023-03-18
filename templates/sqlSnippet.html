@@ -47,14 +47,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.css"/>
     <link rel="stylesheet" href="/static/main.css">
 	
-<style>
-    .rhs{
-        width: 80%;
-/* float: right; */
-margin: 0 0 auto auto;
-padding : 20px;
-    }
-</style>
+
 </head>
 <body  onload="">
     <!-- <a class="toggle-bar" onclick="toggleLHS(this)" href="#"><i class="fa fa-align-justify"></i></a> -->
@@ -74,6 +67,8 @@ padding : 20px;
 
 	    <div id="maincontent" class="rhs fixed">
             <h2 id="section-heading"></h2>
+            <hr class="dashed">
+            <div id="pptslides"></div>
             <p id="section-description"></p>
             <div id="maincontainer">
             </div>
@@ -82,8 +77,7 @@ padding : 20px;
 </div>
 <div id="waiting">
     <div id="spinner"></div> 
-</div>
-
+</div> 
 </body>
 <script type="text/javascript" src="//cdn.datacamp.com/dcl-react.js.gz"></script>
 </html>
