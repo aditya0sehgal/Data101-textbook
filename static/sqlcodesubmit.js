@@ -11,6 +11,7 @@ $(document).ready(function () {
     console.log("helllo1")
     scrollToTap();
     initAddedDCLightExercises();
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
     console.log("helllo2")
   });
 
@@ -18,24 +19,6 @@ $(document).ready(function () {
     $("#maincontent").scrollTop(0);
   }
 
-function testing_r(id){
-    // let maindiv=document.getElementById("maincontainer");
-    // var txt="";
-    // txt=txt+ '<div data-datacamp-exercise data-lang="r" data-show-run-button data-height="500">'+
-    // '<code data-type="pre-exercise-code"> </code>'+
-    // '<code data-type="sample-code">'+
-    // 'a<-5'+
-    // '</code>'+
-    // '<code data-type="solution"> </code>'+
-    // '<code data-type="sct"> </code>'+
-    // '<div data-type="hint"> </div>'+
-    // '</div>';
-    // var childiv=document.createElement("div");
-    // childiv.setAttribute("id","example-"+id);
-    // childiv.innerHTML=txt;
-    // maindiv.append(childiv);
-
-}
 function showSpinner() 
 {
     let spinner = document.getElementById("spinner");
@@ -160,7 +143,7 @@ async function createSqlSnippets(sectionid){
         });
     }
     initAddedDCLightExercises();
-    // MathJax.typeset()
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
     scrollToTap()
 }
 
