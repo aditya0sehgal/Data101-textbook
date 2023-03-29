@@ -77,10 +77,10 @@ async function createSqlSnippets(sectionid){
     
     for(let i=0;i<snippetdata.length;i++){
         if(snippetdata[i].Type == 'R'){
-            
+            let pre_code = snippetdata[i].PreExCode ? snippetdata[i].PreExCode : ''
             txt="<h3>"+parseInt(i+1)+". " + snippetdata[i].Title +"</h3>"
-            txt=txt+ '<div data-datacamp-exercise data-lang="r" data-no-lazy-laoding data-show-run-button data-height="500">'+
-            '<code data-type="pre-exercise-code"> </code>'+
+            txt=txt+ '<div data-datacamp-exercise data-lang="r" data-no-lazy-loading data-show-run-button data-height="500">'+
+            '<code data-type="pre-exercise-code">'+ pre_code +'</code>'+
             '<code data-type="sample-code">'+
             snippetdata[i].Query+
             '</code>'+
@@ -98,7 +98,7 @@ async function createSqlSnippets(sectionid){
         else if(snippetdata[i].Type == 'Python'){
             var txt="";
             txt=txt+ '<div data-datacamp-exercise data-lang="python" data-show-run-button data-height="500">'+
-            '<code data-type="pre-exercise-code"> </code>'+
+            '<code data-type="pre-exercise-code">'+ snippetdata[i].PreExCode +'</code>'+
             '<code data-type="sample-code">'+
             snippetdata[i].Query+
             '</code>'+
