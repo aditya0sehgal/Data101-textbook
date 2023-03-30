@@ -370,7 +370,7 @@ function createSectionLHS(){
         let i=document.createElement("i");
         i.setAttribute("class","fa fa-check");
         let b=document.createElement("b")
-        b.innerHTML=parseInt(key)+1
+        b.innerHTML=parseInt(key)+". "
         let textNode = document.createTextNode(" "+value.name);
         a.append(i);
         a.append(b);
