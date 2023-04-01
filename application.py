@@ -10,13 +10,9 @@ from pymongo import MongoClient
 import bson.json_util as json_util
 import json
 import pandas as pd
-import schedule
+
 import time
 
-import atexit
-
-from apscheduler.schedulers.background import BackgroundScheduler
-import flask_profiler
 import flask_monitoringdashboard as dashboard
 
 
