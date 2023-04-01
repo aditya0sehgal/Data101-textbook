@@ -4,4 +4,3 @@ pymysql==1.0.2
 simplejson==3.17.6
 pymongo==4.3.2
 pandas==1.5.3
-Flask-MonitoringDashboard==3.1.1

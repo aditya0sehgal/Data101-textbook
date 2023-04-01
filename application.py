@@ -11,7 +11,7 @@ import bson.json_util as json_util
 import json
 import pandas as pd
 
-import flask_monitoringdashboard as dashboard
+# import flask_monitoringdashboard as dashboard
 
 
 
@@ -39,7 +39,7 @@ class JsonEncoder(JSONEncoder):
 application = Flask(__name__)
 CORS(application)
 application.json_encoder = JsonEncoder
-dashboard.bind(application)
+# dashboard.bind(application)
 
 
 
