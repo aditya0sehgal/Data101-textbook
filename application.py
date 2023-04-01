@@ -11,7 +11,6 @@ import bson.json_util as json_util
 import json
 import pandas as pd
 
-
 import flask_monitoringdashboard as dashboard
 
 
