@@ -5,6 +5,7 @@ const query = encodeURIComponent('Select *')
 const mime = 'text/x-mysql';
 // var jsondataquery={}
 const storagesectionid="section-id-";
+var cache = {}
 var current_section_id;
 $(document).ready(function () {
     console.log("helllo")
@@ -47,6 +48,7 @@ function hideSpinner()
 
 function set_storage_section(event,ele,sectionid){
     event.stopPropagation();
+    showSpinner()
 
     let parent = ele.getAttribute("data-parent")
 
@@ -56,21 +58,20 @@ function set_storage_section(event,ele,sectionid){
     ele.classList.add("active");
     let active = {"key":sectionid, "parent": parent }
     sessionStorage.setItem('current-section'+sheetId, JSON.stringify(active));
-    console.log(parent)
-    console.log(current_section_id)
+
     if(parent != current_section_id){
-        console.log("YESS")
+
         document.getElementById("maincontent").innerHTML = ''
         handleSectionClick(parent)
     }
     if(parent != sectionid){
-        console.log(sectionid)
+
     let elmntToView = document.getElementById("section-"+sectionid);
     elmntToView.scrollIntoView();
     } 
     current_section_id = parent
-    
-  
+    hideSpinner()
+
     // location.reload();
 
 }
@@ -175,13 +176,28 @@ async function createSqlSnippets(sectionid){
 
 
 function handleSectionClick(sectionid){
-    console.log(sectionid)
+
     document.getElementById("maincontent").innerHTML = ' '
     var data=jsondataquery[sectionid]
-    createMainPage(data,sectionid,false)
+
+    if(sectionid in cache){
+
+        document.getElementById("maincontent").innerHTML = cache[sectionid]
+    }
+    else{
+        if(data.parent in cache){
+
+            document.getElementById("maincontent").innerHTML = cache[data.parent]
+        }
+        else{
+
+            let divcontent = createMainPage(data,sectionid,false)
+            cache[sectionid] = divcontent.innerHTML
+            cache[data.parent] = divcontent.innerHTML
+        }
+    }
     initAddedDCLightExercises();
     MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
-
     // scrollToTap()
 }
 
@@ -192,6 +208,7 @@ function createMainPage(data,sectionid,child){
     for (let val in data.child){
         createMainPage(data['child'][val],val,true)
     }
+    return mdiv
 }
 
 function generate_content(data,sectionid){
@@ -208,7 +225,7 @@ function generate_content(data,sectionid){
     let snippetdiv = document.createElement('div');
     snippetdiv.setAttribute("id","snippets-"+sectionid)
 
-    header.innerHTML = data.Name
+    header.innerHTML = sectionid + ". "+ data.Name
     detailsdiv.innerHTML = data.Details
     if(data.Slides == ''){
         pptslidediv.innerHTML = ''
@@ -227,7 +244,7 @@ function generate_content(data,sectionid){
     for(let i=0;i<snippetdata.length;i++){
         if(snippetdata[i].Type == 'R'){
             let pre_code = snippetdata[i].PreExCode ? snippetdata[i].PreExCode : ''
-            txt="<h3>"+parseInt(i+1)+". " + snippetdata[i].Title +"</h3>"
+            txt="<h3 class='snippet-header'>"+parseInt(i+1)+". " + snippetdata[i].Title +"</h3>"
             txt=txt+ '<div data-datacamp-exercise data-lang="r" data-no-lazy-load data-show-run-button data-height="500">'+
             '<code data-type="pre-exercise-code">'+ pre_code +'</code>'+
             '<code data-type="sample-code">'+

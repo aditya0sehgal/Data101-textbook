@@ -109,8 +109,11 @@ padding : 40px;
     }
 .section-heading{
         font-weight:600;
+        padding-top: 10px;
     }
-
+.snippet-header{
+  margin: 30px 0px;
+}
     /* Dashed border */
 hr.dashed {
   border-top: 1px dashed #bbb;
