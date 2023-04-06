@@ -3,13 +3,16 @@
 const base = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?`;
 const query = encodeURIComponent('Select *')
 const mime = 'text/x-mysql';
-var jsondataquery={}
+// var jsondataquery={}
 const storagesectionid="section-id-";
+var current_section_id;
 $(document).ready(function () {
     console.log("helllo")
-    init();
+    // init();
+    newlhs()
+    // createSectionLHS();
     console.log("helllo1")
-    scrollToTap();
+    // scrollToTap();
     initAddedDCLightExercises();
     MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
     console.log("helllo2")
@@ -42,28 +45,51 @@ function hideSpinner()
     waiting.style.display="none";
 }
 
-function set_storage_section(ele,sectionid){
-    var prevsection=sessionStorage.getItem('current-section'+sheetId);
-    var prevele=document.getElementById(storagesectionid+prevsection);
+function set_storage_section(event,ele,sectionid){
+    event.stopPropagation();
+
+    let parent = ele.getAttribute("data-parent")
+
+    var prevsection = JSON.parse(sessionStorage.getItem('current-section'+sheetId))['key'];
+    var prevele = document.getElementById(storagesectionid+prevsection);
     prevele.classList.remove("active");
     ele.classList.add("active");
-    sessionStorage.setItem('current-section'+sheetId, sectionid);
-    location.reload();
+    let active = {"key":sectionid, "parent": parent }
+    sessionStorage.setItem('current-section'+sheetId, JSON.stringify(active));
+    console.log(parent)
+    console.log(current_section_id)
+    if(parent != current_section_id){
+        console.log("YESS")
+        document.getElementById("maincontent").innerHTML = ''
+        handleSectionClick(parent)
+    }
+    if(parent != sectionid){
+        console.log(sectionid)
+    let elmntToView = document.getElementById("section-"+sectionid);
+    elmntToView.scrollIntoView();
+    } 
+    current_section_id = parent
+    
+  
+    // location.reload();
+
 }
 
 async function createSqlSnippets(sectionid){
 
-    console.log(jsondataquery)
+    console.log(sectionid)
     var data=jsondataquery[sectionid]
 
-    document.getElementById("section-heading").innerHTML=data.name
-    document.getElementById("section-description").innerHTML=data.description
-    if(data.pptslides == ''){
+    createMainPage(data,sectionid,false)
+
+    document.getElementById("section-heading").innerHTML=data.Name
+    document.getElementById("section-description").innerHTML=data.Details
+    if(data.Slides == ''){
         document.getElementById("pptslides").innerHTML = ''
         document.getElementById("pptslides").style.display = 'none'
     }
     else{
-        document.getElementById("pptslides").innerHTML = data.pptslides
+        document.getElementById("pptslides").innerHTML = data.Slides
         document.getElementById("pptslides").style.display = 'block'
     }
 
@@ -78,8 +104,8 @@ async function createSqlSnippets(sectionid){
     for(let i=0;i<snippetdata.length;i++){
         if(snippetdata[i].Type == 'R'){
             let pre_code = snippetdata[i].PreExCode ? snippetdata[i].PreExCode : ''
-            txt="<h3>"+parseInt(i+1)+". " + snippetdata[i].Title +"</h3>"
-            txt=txt+ '<div data-datacamp-exercise data-lang="r" data-no-lazy-loading data-show-run-button data-height="500">'+
+            txt="<h2>"+parseInt(i+1)+". " + snippetdata[i].Title +"</h2>"
+            txt=txt+ '<div data-datacamp-exercise data-lang="r" data-no-lazy-load data-show-run-button data-height="500">'+
             '<code data-type="pre-exercise-code">'+ pre_code +'</code>'+
             '<code data-type="sample-code">'+
             snippetdata[i].Query+
@@ -114,7 +140,7 @@ async function createSqlSnippets(sectionid){
         }
         txt="";
         txt=txt + "<div class='ws-grey' style='padding:15px;padding-bottom:40px;margin-bottom:0px;box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);'>"
-        txt=txt+"<h3>"+parseInt(i+1)+". " + snippetdata[i].Title +"</h3>"
+        txt=txt+"<h2>"+parseInt(i+1)+". " + snippetdata[i].Title +"</h2>"
         txt=txt+"<textarea id='textarea-"+i+"' wrap='logical' style='display: none;'>"+snippetdata[i].Query+"</textarea>"
         txt=txt+"<p>Edit the SQL Statement, and click Run SQL to see the result.</p>"
         txt=txt+"<button class='ws-btn' type='button' onclick='sqlCodeSubmit("+i+");'>Run Query »</button>" + "<h3>Result:</h3>" 
@@ -146,6 +172,136 @@ async function createSqlSnippets(sectionid){
     MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
     scrollToTap()
 }
+
+
+function handleSectionClick(sectionid){
+    console.log(sectionid)
+    document.getElementById("maincontent").innerHTML = ' '
+    var data=jsondataquery[sectionid]
+    createMainPage(data,sectionid,false)
+    initAddedDCLightExercises();
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+
+    // scrollToTap()
+}
+
+function createMainPage(data,sectionid,child){
+    let mdiv= document.getElementById("maincontent")
+    let topdata = generate_content(data,sectionid)
+    mdiv.append(topdata)
+    for (let val in data.child){
+        createMainPage(data['child'][val],val,true)
+    }
+}
+
+function generate_content(data,sectionid){
+    let maindiv = document.createElement('div');
+    maindiv.setAttribute("id","section-"+sectionid)
+    let header = document.createElement('h2');
+    header.setAttribute("class","section-heading")
+    let dashed = document.createElement('hr');
+    dashed.setAttribute("class","dashed")
+    let pptslidediv =  document.createElement('div');
+    pptslidediv.setAttribute("id","pptslides-"+sectionid)
+    let detailsdiv =  document.createElement('div');
+    detailsdiv.setAttribute("class","section-description")
+    let snippetdiv = document.createElement('div');
+    snippetdiv.setAttribute("id","snippets-"+sectionid)
+
+    header.innerHTML = data.Name
+    detailsdiv.innerHTML = data.Details
+    if(data.Slides == ''){
+        pptslidediv.innerHTML = ''
+        pptslidediv.setAttribute("style","display:none;")
+    }
+    else{
+        pptslidediv.innerHTML = data.Slides
+        pptslidediv.setAttribute("style","display:block;")
+    }
+
+    if(!("snippets" in data)){
+        return;
+    }
+    var snippetdata=data.snippets
+    
+    for(let i=0;i<snippetdata.length;i++){
+        if(snippetdata[i].Type == 'R'){
+            let pre_code = snippetdata[i].PreExCode ? snippetdata[i].PreExCode : ''
+            txt="<h3>"+parseInt(i+1)+". " + snippetdata[i].Title +"</h3>"
+            txt=txt+ '<div data-datacamp-exercise data-lang="r" data-no-lazy-load data-show-run-button data-height="500">'+
+            '<code data-type="pre-exercise-code">'+ pre_code +'</code>'+
+            '<code data-type="sample-code">'+
+            snippetdata[i].Query+
+            '</code>'+
+            '<code data-type="solution"> </code>'+
+            '<code data-type="sct"> </code>'+
+            '<div data-type="hint"> </div>'+
+            '</div>';
+            var childiv=document.createElement("div");
+            childiv.setAttribute("id","example-"+i);
+            childiv.innerHTML=txt;
+            snippetdiv.append(childiv);
+            
+            continue
+        }
+        else if(snippetdata[i].Type == 'Python'){
+            var txt="";
+            txt=txt+ '<div data-datacamp-exercise data-lang="python" data-show-run-button data-height="500">'+
+            '<code data-type="pre-exercise-code">'+ snippetdata[i].PreExCode +'</code>'+
+            '<code data-type="sample-code">'+
+            snippetdata[i].Query+
+            '</code>'+
+            '<code data-type="solution"> </code>'+
+            '<code data-type="sct"> </code>'+
+            '<div data-type="hint"> </div>'+
+            '</div>';
+            var childiv=document.createElement("div");
+            childiv.setAttribute("id","example-"+i);
+            childiv.innerHTML=txt;
+            snippetdiv.append(childiv);
+            continue
+        }
+        txt="";
+        txt=txt + "<div class='ws-grey' style='padding:15px;padding-bottom:40px;margin-bottom:0px;box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);'>"
+        txt=txt+"<h3>"+parseInt(i+1)+". " + snippetdata[i].Title +"</h3>"
+        txt=txt+"<textarea id='textarea-"+i+"' wrap='logical' style='display: none;'>"+snippetdata[i].Query+"</textarea>"
+        txt=txt+"<p>Edit the SQL Statement, and click Run SQL to see the result.</p>"
+        txt=txt+"<button class='ws-btn' type='button' onclick='sqlCodeSubmit("+i+");'>Run Query »</button>" + "<h3>Result:</h3>" 
+        txt=txt+"<div id='resultSQL-"+i+"'>"+
+        "<div class='w3-white' id='divResultSQL-"+i+"' style='display: block; padding:10px;'>"+
+        "  Results will be displayed here" + 
+        "</div></div> </div>  ";
+        var childiv=document.createElement("div");
+        childiv.setAttribute("id","example-"+i);
+        childiv.setAttribute("class","outersnippetdiv");
+        if(snippetdata[i].Width){
+            childiv.setAttribute("style","width:"+parseFloat(snippetdata[i].Width)*100+"%");
+        }
+        childiv.innerHTML=txt;
+        snippetdiv.append(childiv);
+        CodeMirror.fromTextArea(document.getElementById('textarea-'+i), {
+          resultId:"sql-code-example-"+i,
+          mode: mime,
+          indentWithTabs: true,
+          smartIndent: true,
+          lineNumbers: false,
+          matchBrackets : true,
+          autofocus: true,
+          lineWrapping:true,
+          extraKeys: {"Ctrl-Space": "autocomplete"}
+        });
+    }
+
+    maindiv.append(header)
+    maindiv.append(dashed)
+    maindiv.append(pptslidediv)
+    maindiv.append(detailsdiv)
+    maindiv.append(snippetdiv)
+    return maindiv
+}
+
+
+
 
 function sqlCodeSubmit(id){
 
@@ -374,13 +530,13 @@ function createSectionLHS(){
             current_key=key
         }
         let a=document.createElement("a");
-        li.setAttribute("onclick","set_storage_section(this,'"+key+"');")
+        li.setAttribute("onclick","set_storage_section(event,this,'"+key+"');")
         li.setAttribute("id",storagesectionid+key)
         let i=document.createElement("i");
         i.setAttribute("class","fa fa-check");
         let b=document.createElement("b")
         b.innerHTML=parseInt(key)+". "
-        let textNode = document.createTextNode(" "+value.name);
+        let textNode = document.createTextNode(" "+value.Name);
         a.append(i);
         a.append(b);
         a.append(textNode)
@@ -390,7 +546,51 @@ function createSectionLHS(){
       createSqlSnippets(current_key);
 }
 
-
+function newlhs(){
+    var current_key;
+    var current_parent;
+    const buildLI = (data,key) => {
+        const li = document.createElement('li');
+        if(!("current-section"+sheetId in sessionStorage)|| JSON.parse(sessionStorage.getItem('current-section'+sheetId))['key']==key){
+            li.setAttribute("class","chapter active");
+            licurrent=li;
+            let active = {"key":key, "parent": data.parent }
+            sessionStorage.setItem('current-section'+sheetId,JSON.stringify(active));
+            current_key=key
+            current_parent = data.parent
+            current_section_id = data.parent
+        }
+        let a=document.createElement("a");
+        li.setAttribute("onclick","set_storage_section(event,this,'"+key+"');")
+        li.setAttribute("data-parent",data.parent)
+        li.setAttribute("id",storagesectionid+key)
+        let i=document.createElement("i");
+        i.setAttribute("class","fa fa-check");
+        let b=document.createElement("b")
+        b.innerHTML=key+". "
+        let textNode = document.createTextNode(" "+data.Name);
+        a.append(i);
+        a.append(b);
+        a.append(textNode)
+        li.append(a)
+        if(data.child) li.appendChild(buildUL(data.child));
+        return li;
+      };
+      
+      const buildUL = (data) => {
+        const ul = document.createElement('ul');
+        for(let d in data) {
+            ul.appendChild(buildLI(data[d],d));
+        }
+        // data.forEach(d => {
+        //   ul.appendChild(buildLI(d));    
+        // });
+        return ul;
+      };
+     document.getElementById("sql-sections").append(buildUL(jsondataquery))
+     handleSectionClick(current_parent);
+    //   console.log(buildUL(jsondataquery))
+}
 
 function toggleLHS(ele){
     var lhs=document.getElementsByClassName("book-summary")[0];

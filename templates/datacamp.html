@@ -1,19 +1,29 @@
 <!doctype html>
 <html>
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script>
+        var res = '{{ value | tojson | safe}}'
+        const sheetId = '{{sheetId}}';
+        var finaldata= JSON.parse(res.slice(1,-1))
+        var jsondataquery = finaldata
+       console.log(finaldata)
+    </script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-J63QJQY9K0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-J63QJQY9K0');
+</script>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>SQL Live Snippets</title>
+	<title>Tutorial Book</title>
     <link rel="shortcut icon" href="#">
-    
+
 	<link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" type="text/css" media="all" title="no title" charset="utf-8"/>
-    <script>
-        var res = '{{ value | tojson | safe}}'
-        var finaldata= JSON.parse(res.slice(1,-1))
-       const sheetId = '1Iu-zCunodM-l1xH1sU50Huf6BDWoBBBG7xd_7u8plgk'
-       
-    </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.2.0/jszip.min.js"></script>
 
@@ -21,7 +31,15 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" />
 
  
-<script  type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.js"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      showProcessingMessages: false,
+      tex2jax: { inlineMath: [['$','$'],['\\(','\\)']] }
+    });
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="http://bandicoot.maths.adelaide.edu.au/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
     
     <link rel="stylesheet" href="/static/docs.css">
@@ -33,27 +51,21 @@
     <script src="/static/sql.js"></script>
     <script src="/static/show-hint.js"></script>
     <script src="/static/sql-hint.js"></script>
-    <!-- <script type="text/javascript" src="/static/sqlcodesubmit.js"></script> -->
+    <script type="text/javascript" src="/static/main.js"></script>
     
-    
+
     <link rel="stylesheet" href="/static/w3schools.css">
     <link rel="stylesheet" href="/static/codemirror.css">
     <link rel="stylesheet" href="/static/lhs.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.css"/>
     <link rel="stylesheet" href="/static/main.css">
 	
-    <style>
-        .rhs{
-            width: 75%;
-    /* float: right; */
-    margin: 0 0 auto auto;
-        }
-    </style>
+
 </head>
-<body  onload=" ">
-   <a class="toggle-bar" onclick="toggleLHS(this)" href="#"><i class="fa fa-align-justify"></i></a>
+<body  onload="">
+    <!-- <a class="toggle-bar" onclick="toggleLHS(this)" href="#"><i class="fa fa-align-justify"></i></a> -->
     <div id="mainbody" class="book font-size-2 font-family-1 with-summary">
-        <div class="book-summary" style="width: 25%;  position: fixed;
+        <div class="book-summary" style="width: 20%;  position: fixed;
         z-index: 1;
         top: 0;
         left: 0;height: 100%;  overflow-x: hidden;">
@@ -65,108 +77,20 @@
                 </ul>
             </nav>
         </div>
-    <div class="fixed rhs" id="test">
 
-    </div>
-	    <!-- <div id="maincontent" class="book-body fixed">
-            <h2 id="section-heading"></h2>
+	    <div id="maincontent" class="rhs fixed">
+            <!-- <h2 id="section-heading"></h2>
+            <hr class="dashed">
+            <div id="pptslides"></div>
             <p id="section-description"></p>
             <div id="maincontainer">
             </div> -->
 		
     </div>
 </div>
-<!-- <div id="waiting">
+<div id="waiting">
     <div id="spinner"></div> 
-</div>  -->
-
-    <!-- <iframe width='100%' height='100%' src='https://rdrr.io/snippets/embed/' frameborder='0'></iframe> -->
+</div> 
 </body>
 <script type="text/javascript" src="//cdn.datacamp.com/dcl-react.js.gz"></script>
-<script>
-    $(document).ready(function () {
-
-        testing()
-        initAddedDCLightExercises();
-      });
-</script>
-
-<script>
-    function section_test(){
-        var licurrent;
-        var parentul=document.getElementById("sql-sections");
-        console.log(finaldata.length)
-        console.log(finaldata)
-        for(let j = 0; j < finaldata.length; j++){
-            console.log(j)
-            let currentkey=j;
-            let li=document.createElement("li");
-            let a=document.createElement("a");
-            li.setAttribute("onclick","set_storage_section(this,'"+j+"');")
-            li.setAttribute("id",j)
-            let i=document.createElement("i");
-            i.setAttribute("class","fa fa-check");
-            let b=document.createElement("b")
-            b.innerHTML=parseInt(j)+1
-            let textNode = document.createTextNode(" "+finaldata[j].Name);
-            a.append(i);
-            a.append(b);
-            a.append(textNode)
-            li.append(a)
-            parentul.append(li);
-        }
-        
-    }
-</script>
-<script>
-function testing(){
-console.log('hi')
-
-    let testdiv=document.getElementById("test");
-   //testdiv.style.display="block";
-    //testdiv.innerHTML=" "; 
-
-    var txt="";
-    txt=txt+ '<div data-datacamp-exercise data-lang="r" data-show-run-button  data-height="500">'+
-    '<code data-type="pre-exercise-code"> </code>'+
-    '<code data-type="sample-code">'+
-    'a<-5'+
-    '</code>'+
-    '<code data-type="solution"> </code>'+
-    '<code data-type="sct"> </code>'+
-    '<div data-type="hint"> </div>'+
-    '</div>';
-    var childiv=document.createElement("div");
-    childiv.setAttribute("id","example-"+99);
-    childiv.setAttribute("style","display:none");
-    childiv.innerHTML=txt;
-    testdiv.append(childiv); 
-
-    for(let i=0;i<finaldata[1].Snippets.length;i++){
-        txt="";
-        txt=txt+ '<div data-datacamp-exercise data-lang="r" data-show-run-button  data-height="500">'+
-        '<code data-type="pre-exercise-code"> </code>'+
-        '<code data-type="sample-code">'+
-        finaldata[1].Snippets[i].Query+
-        '</code>'+
-        '<code data-type="solution"> </code>'+
-        '<code data-type="sct"> </code>'+
-        '<div data-type="hint"> </div>'+
-        '</div>';
-        var childiv1=document.createElement("div");
-        childiv1.setAttribute("id","example-"+i);
-        childiv1.innerHTML=txt;
-        testdiv.append(childiv1);
-    }
-}
-
-</script>
 </html>
-
-
-
-
-
-
- 
-          

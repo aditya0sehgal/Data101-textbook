@@ -17,7 +17,7 @@ body {font-family:'Open Sans';
         padding-right: 25px;
         padding-top: 10px;
     }
-    #section-description{
+    .section-description{
         font-size: 20px;
     }
     .toggle-bar{
@@ -89,7 +89,7 @@ body {font-family:'Open Sans';
         margin-bottom: 40px;
       }
       
-      #section-description{
+      .section-description{
         white-space: pre-line;
         padding-bottom: 10px;
       }
@@ -107,7 +107,7 @@ padding : 40px;
         padding-bottom: 10px;
         display: none;
     }
-    #section-heading{
+.section-heading{
         font-weight:600;
     }
 
@@ -133,4 +133,8 @@ hr.solid {
 hr.rounded {
   border-top: 8px solid #bbb;
   border-radius: 5px;
+}
+
+ul ul{
+  padding: 0px;
 }

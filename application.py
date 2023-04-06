@@ -60,10 +60,66 @@ def html_editor():
 def sqlsnippet():
     return render_template("sqlSnippet.html", value = '1Iu-zCunodM-l1xH1sU50Huf6BDWoBBBG7xd_7u8plgk', title = 'SQL Live Coding Tutorial Book')
 
+# @application.route('/Rdata101', methods=['GET'])
+# def Rdata101():
+#     return render_template("sqlSnippet.html", value = '1g4SFwZuRTO5-4uRuNN_pz3UQaqEoDUMXk0QjTFophJk', title = 'R Live Coding Tutorial Book')
+
 @application.route('/Rdata101', methods=['GET'])
 def Rdata101():
-    return render_template("sqlSnippet.html", value = '1g4SFwZuRTO5-4uRuNN_pz3UQaqEoDUMXk0QjTFophJk', title = 'R Live Coding Tutorial Book')
 
+    sheet_id = '1g4SFwZuRTO5-4uRuNN_pz3UQaqEoDUMXk0QjTFophJk'
+    sheet_name = 'Sheet1'
+    url = 'https://docs.google.com/spreadsheets/d/'+sheet_id+'/gviz/tq?tqx=out:csv&sheet='+sheet_name
+    df=pd.read_csv(url)
+    df.fillna('', inplace=True)
+    sheet_name = 'Sheet2'
+    url = 'https://docs.google.com/spreadsheets/d/'+sheet_id+'/gviz/tq?tqx=out:csv&sheet='+sheet_name
+    df1=pd.read_csv(url)
+    df1.fillna('', inplace=True)
+
+    df.drop(df.columns[df.columns.str.contains('unnamed',case = False)],axis = 1, inplace = True)
+    df1.drop(df1.columns[df1.columns.str.contains('unnamed',case = False)],axis = 1, inplace = True)
+
+    cols = df.columns.difference(['Section'])
+    d = (df.groupby(['Section'])[cols]
+            .apply(lambda x: x.to_dict('records')).to_dict())
+    d = {str(k):v for k,v in d.items()}
+
+    df1=df1.set_index('Section')
+
+    sections = df1.to_dict('index')
+    sections = {str(k):v for k,v in sections.items()}
+
+
+    final_dict = {}
+    prev = {}
+    prev_key = 0
+    curr = {}
+    for key in sections.keys():
+        sections[key]['child'] = {}
+        sections[key]['parent'] = key
+        if key in d:
+
+            sections[key]['snippets'] = d[key]
+        else :
+            sections[key]['snippets'] = {}
+        count = key.count('.')
+        curr = prev
+        s = key
+
+        if count > 0:
+            sections[key]['parent'] = prev_key
+            for i in range(count-1):
+                s = s.rsplit('.', 1)[0]
+                curr = curr['child'][s]
+            curr['child'][key] = sections[key]
+        else:
+            final_dict[key] = sections[key]
+            prev = final_dict[key]
+            prev_key = key
+
+    res = json.dumps(final_dict)
+    return render_template("datacamp.html",value=res,title = 'R Live Coding Tutorial Book', sheetId= sheet_id)
 
 @application.route('/R', methods=['GET'])
 def main_r_page():
@@ -133,9 +189,61 @@ def mongoTutorialCode():
 
 
 
-# @application.route('/test', methods=['GET'])
-# def test():
-#     return render_template("sqlSnippet.html", value = '1aX7hU251jONPZsAbcqMOoZBjqDs_0pwuI2OfSPmtApk', title = 'R Live Coding Tutorial Book')
+@application.route('/test', methods=['GET'])
+def test():
+    sheet_id = '1g4SFwZuRTO5-4uRuNN_pz3UQaqEoDUMXk0QjTFophJk'
+    sheet_name = 'Sheet1'
+    url = 'https://docs.google.com/spreadsheets/d/'+sheet_id+'/gviz/tq?tqx=out:csv&sheet='+sheet_name
+    df=pd.read_csv(url)
+    df.fillna('', inplace=True)
+    sheet_name = 'Sheet2'
+    url = 'https://docs.google.com/spreadsheets/d/'+sheet_id+'/gviz/tq?tqx=out:csv&sheet='+sheet_name
+    df1=pd.read_csv(url)
+    df1.fillna('', inplace=True)
+
+    df.drop(df.columns[df.columns.str.contains('unnamed',case = False)],axis = 1, inplace = True)
+    df1.drop(df1.columns[df1.columns.str.contains('unnamed',case = False)],axis = 1, inplace = True)
+
+    cols = df.columns.difference(['Section'])
+    d = (df.groupby(['Section'])[cols]
+            .apply(lambda x: x.to_dict('records')).to_dict())
+    d = {str(k):v for k,v in d.items()}
+
+    df1=df1.set_index('Section')
+
+    sections = df1.to_dict('index')
+    sections = {str(k):v for k,v in sections.items()}
+
+
+    final_dict = {}
+    prev = {}
+    prev_key = 0
+    curr = {}
+    for key in sections.keys():
+        sections[key]['child'] = {}
+        sections[key]['parent'] = key
+        if key in d:
+
+            sections[key]['snippets'] = d[key]
+        else :
+            sections[key]['snippets'] = {}
+        count = key.count('.')
+        curr = prev
+        s = key
+
+        if count > 0:
+            sections[key]['parent'] = prev_key
+            for i in range(count-1):
+                s = s.rsplit('.', 1)[0]
+                curr = curr['child'][s]
+            curr['child'][key] = sections[key]
+        else:
+            final_dict[key] = sections[key]
+            prev = final_dict[key]
+            prev_key = key
+
+    res = json.dumps(final_dict)
+    return render_template("datacamp.html",value=res,title = 'R Live Coding Tutorial Book', sheetId= sheet_id)
 
 # @application.route('/htmleditor', methods=['GET'])
 # def htmleditor():
