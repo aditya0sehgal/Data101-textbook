@@ -181,16 +181,13 @@ function handleSectionClick(sectionid){
     var data=jsondataquery[sectionid]
 
     if(sectionid in cache){
-
         document.getElementById("maincontent").innerHTML = cache[sectionid]
     }
     else{
         if(data.parent in cache){
-
             document.getElementById("maincontent").innerHTML = cache[data.parent]
         }
         else{
-
             let divcontent = createMainPage(data,sectionid,false)
             cache[sectionid] = divcontent.innerHTML
             cache[data.parent] = divcontent.innerHTML
@@ -240,11 +237,16 @@ function generate_content(data,sectionid){
         return;
     }
     var snippetdata=data.snippets
-    
     for(let i=0;i<snippetdata.length;i++){
         if(snippetdata[i].Type == 'R'){
             let pre_code = snippetdata[i].PreExCode ? snippetdata[i].PreExCode : ''
-            txt="<h3 class='snippet-header'>"+parseInt(i+1)+". " + snippetdata[i].Title +"</h3>"
+            let details = snippetdata[i].Details ? snippetdata[i].Details : ''
+            if(snippetdata[i].Title == " " ){
+                txt="<h3 class='snippet-header'>"+parseInt(i+1)+". " + snippetdata[i].Title +"</h3>"
+            }
+            else{
+                txt = ""
+            }
             txt=txt+ '<div data-datacamp-exercise data-lang="r" data-no-lazy-load data-show-run-button data-height="500">'+
             '<code data-type="pre-exercise-code">'+ pre_code +'</code>'+
             '<code data-type="sample-code">'+
@@ -254,6 +256,7 @@ function generate_content(data,sectionid){
             '<code data-type="sct"> </code>'+
             '<div data-type="hint"> </div>'+
             '</div>';
+            txt = txt + "<div class='section-description'>" + details + "</div>"
             var childiv=document.createElement("div");
             childiv.setAttribute("id","example-"+i);
             childiv.innerHTML=txt;
