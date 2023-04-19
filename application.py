@@ -245,6 +245,11 @@ def test():
     res = json.dumps(final_dict)
     return render_template("datacamp.html",value=res,title = 'R Live Coding Tutorial Book', sheetId= sheet_id)
 
+
+@application.route('/highchart', methods=['GET'])
+def highcharts():
+    return render_template("highcharts.html")
+
 # @application.route('/htmleditor', methods=['GET'])
 # def htmleditor():
 #     return render_template("htmleditor.html")

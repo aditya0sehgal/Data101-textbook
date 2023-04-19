@@ -1,0 +1,219 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  
+<head>
+      <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-J63QJQY9K0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-J63QJQY9K0');
+</script>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, 
+        initial-scale=1, shrink-to-fit=no">
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="https://code.highcharts.com/modules/data.js"></script>
+        <script src="https://code.highcharts.com/modules/exporting.js"></script>
+        <script src="https://code.highcharts.com/modules/export-data.js"></script>
+        <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href=
+"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity=
+"sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+  
+    <link rel="stylesheet" href=
+"https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+        integrity=
+"sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+         crossorigin="anonymous">
+  
+    <title>
+        Highcharts
+    </title>
+    <style>
+        #result {
+            display:block;
+            width:400px;
+            height:200px;
+          }
+          
+          #import {
+            margin:10px 0;
+          }
+    </style>
+</head>
+  
+<body>
+    <div class="container">
+        <div>
+        <input type="file" id="fileinput" value="Import" /><br />
+        <button id="import">Import</button>
+    </div>
+    </div>
+
+    <figure class="highcharts-figure">
+        <div id="container"></div>
+    </figure>
+
+
+<script>
+    function plotgraph(data) {
+        Highcharts.chart('container', {
+            chart: {
+                zoomType: 'x'
+            },
+            title: {
+                text: 'Name of artist',
+                align: 'left'
+            },
+            subtitle: {
+                text: document.ontouchstart === undefined ?
+                    'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in',
+                align: 'left'
+            },
+            xAxis: {
+                type: 'datetime'
+            },
+            yAxis: {
+                title: {
+                    text: 'Exchange rate'
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            plotOptions: {
+                area: {
+                    fillColor: {
+                        linearGradient: {
+                            x1: 0,
+                            y1: 0,
+                            x2: 0,
+                            y2: 1
+                        },
+                        stops: [
+                            [0, Highcharts.getOptions().colors[0]],
+                            [1, Highcharts.color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                        ]
+                    },
+                    marker: {
+                        radius: 2
+                    },
+                    lineWidth: 1,
+                    states: {
+                        hover: {
+                            lineWidth: 1
+                        }
+                    },
+                    threshold: null
+                }
+            },
+
+            series: [{
+                type: 'area',
+                name: 'USD to EUR',
+                data: data
+            }]
+        });
+    }
+</script>
+
+    <script>
+        function csvJSON(csv){
+    
+            var lines=csv.split("\n");
+          
+            var result = [];
+          
+            var headers=lines[0].split(",");
+          
+            for(var i=1;i<lines.length;i++){
+          
+                var obj = [];
+                var currentline=lines[i].split(",");
+                currentline[1] = currentline[1].replace(/(\r\n|\n|\r)/gm, "");
+                let newdate = currentline[1].replaceAll("-", "/")
+                let date = new Date(newdate);
+                console.log(newdate)
+                obj.push(Date.parse(newdate));
+                obj.push(parseFloat(currentline[0]));
+/*                for(var j=0;j<headers.length;j++){
+                    obj.push(currentline[j]);
+                }*/
+          
+                result.push(obj);
+          
+            }
+            
+            //return result; //JavaScript object
+            console.log(result)
+            return result //JSON
+          }
+    </script>
+    <script>
+
+          function readSingleFile(evt) {
+            var f = evt.target.files[0]; 
+            if (f) {
+              var r = new FileReader();
+              r.onload = function(e) { 
+                  var contents = e.target.result;
+                  console.log("1")
+                  let jsonval = csvJSON(e.target.result)
+                  plotgraph(jsonval)
+                  console.log("1")
+/*                  document.write("File Uploaded! <br />" + "name: " + f.name + "<br />" + "content: " + contents + "<br />" + "type: " + f.type + "<br />" + "size: " + f.size + " bytes <br />");
+        
+                  var lines = contents.split("\n"), output = [];
+                  for (var i=0; i<lines.length; i++){
+                    output.push("<tr><td>" + lines[i].split(",").join("</td><td>") + "</td></tr>");
+                  }
+                  output = "<table>" + output.join("") + "</table>";
+                  document.write(output); */
+             }
+              r.readAsText(f);
+              document.write(output);
+            } else { 
+              alert("Failed to load file");
+            }
+          }
+          document.getElementById('fileinput').addEventListener('change', readSingleFile);
+
+
+    </script>
+
+    
+
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity=
+"sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous">
+    </script>
+  
+    <script src=
+"https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity=
+"sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous">
+    </script>
+  
+    <script src=
+"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity=
+"sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous">
+    </script>
+</body>
+  
+</html>
