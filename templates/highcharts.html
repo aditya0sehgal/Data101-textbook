@@ -138,6 +138,7 @@
           
                 var obj = [];
                 var currentline=lines[i].split(",");
+                if ( currentline[1] ){
                 currentline[1] = currentline[1].replace(/(\r\n|\n|\r)/gm, "");
                 let newdate = currentline[1].replaceAll("-", "/")
                 let date = new Date(newdate);
@@ -149,6 +150,10 @@
                 }*/
           
                 result.push(obj);
+            }
+            else{
+                continue
+            }
           
             }
             
