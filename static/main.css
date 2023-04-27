@@ -111,6 +111,21 @@ padding : 40px;
         font-weight:600;
         padding-top: 10px;
     }
+    .boundless-heading
+    {
+      font-size: 25px;
+      font-weight:600;
+      padding-top: 10px;
+    }
+    .boundlessDetails{
+      color: #008cff;
+      padding: 5px 0 30px 0px;
+      font-size: 20px;
+    }
+    .boundlessDetails a{
+      color: #008cff !important; 
+      padding: 10px 0;
+    }
 .snippet-header{
   margin: 30px 0px;
 }

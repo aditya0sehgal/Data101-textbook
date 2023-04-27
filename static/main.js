@@ -215,6 +215,10 @@ function generate_content(data,sectionid){
     header.setAttribute("class","section-heading")
     let dashed = document.createElement('hr');
     dashed.setAttribute("class","dashed")
+    let boundless = document.createElement('h2');
+    boundless.setAttribute("class","boundless-heading")
+    let boundlessDetails = document.createElement('div');
+    boundlessDetails.setAttribute("class","boundlessDetails")
     let pptslidediv =  document.createElement('div');
     pptslidediv.setAttribute("id","pptslides-"+sectionid)
     let detailsdiv =  document.createElement('div');
@@ -224,6 +228,7 @@ function generate_content(data,sectionid){
 
     header.innerHTML = sectionid + ". "+ data.Name
     detailsdiv.innerHTML = data.Details
+
     if(data.Slides == ''){
         pptslidediv.innerHTML = ''
         pptslidediv.setAttribute("style","display:none;")
@@ -316,6 +321,21 @@ function generate_content(data,sectionid){
     maindiv.append(dashed)
     maindiv.append(pptslidediv)
     maindiv.append(detailsdiv)
+
+    if(data.BoundlessDataset == ''){
+        console.log("n")
+    }
+    else{
+        boundless.innerHTML = "Boundless Analytics";
+        let link = document.createElement("a");
+        link.setAttribute("href","http://209.97.156.178:8082/getsingleDatasetNames?name="+data.BoundlessDataset)
+        link.setAttribute("target","_blank")
+        link.innerHTML = "Boundless Analytics for dataset : " + data.BoundlessDataset
+        boundlessDetails.append(link)
+        maindiv.append(boundless)
+        maindiv.append(boundlessDetails)
+    } 
+
     maindiv.append(snippetdiv)
     return maindiv
 }
