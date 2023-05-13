@@ -13,7 +13,7 @@ $(document).ready(function () {
     newlhs()
     // createSectionLHS();
     console.log("helllo1")
-    // scrollToTap();
+    scrollToTap();
     initAddedDCLightExercises();
     MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
     console.log("helllo2")
@@ -64,11 +64,8 @@ function set_storage_section(event,ele,sectionid){
         document.getElementById("maincontent").innerHTML = ''
         handleSectionClick(parent)
     }
-    if(parent != sectionid){
-
     let elmntToView = document.getElementById("section-"+sectionid);
     elmntToView.scrollIntoView();
-    } 
     current_section_id = parent
     hideSpinner()
 
@@ -195,13 +192,12 @@ function handleSectionClick(sectionid){
     }
     initAddedDCLightExercises();
     MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
-    // scrollToTap()
+    scrollToTap()
 }
-
 function createMainPage(data,sectionid,child){
     let mdiv= document.getElementById("maincontent")
     let topdata = generate_content(data,sectionid)
-    mdiv.append(topdata)
+    mdiv.appendChild(topdata)
     for (let val in data.child){
         createMainPage(data['child'][val],val,true)
     }
@@ -323,7 +319,6 @@ function generate_content(data,sectionid){
     maindiv.append(detailsdiv)
 
     if(data.BoundlessDataset == ''){
-        console.log("n")
     }
     else{
         boundless.innerHTML = "Boundless Analytics";
