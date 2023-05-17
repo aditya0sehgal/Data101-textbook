@@ -222,7 +222,13 @@ function generate_content(data,sectionid){
     let snippetdiv = document.createElement('div');
     snippetdiv.setAttribute("id","snippets-"+sectionid)
 
-    header.innerHTML = sectionid + ". "+ data.Name
+    if(sectionid == 0){
+        header.innerHTML = data.Name
+        header.setAttribute("style","text-align: center")
+    }
+    else{
+        header.innerHTML = sectionid + ". "+ data.Name
+    }
     detailsdiv.innerHTML = data.Details
 
     if(data.Slides == ''){
