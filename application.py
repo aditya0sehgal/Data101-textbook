@@ -66,8 +66,12 @@ def sqlsnippet():
 
 @application.route('/Rdata101', methods=['GET'])
 def Rdata101():
-
+    # Original sheet for the textbook. Uncomment below while pushing.
     sheet_id = '1g4SFwZuRTO5-4uRuNN_pz3UQaqEoDUMXk0QjTFophJk'
+
+    # Copy of actual sheet for coding and testing. Comment below while pushing.
+    # sheet_id = '163hgBq_WSWhle4DpVszEfgnbJtznqbalXQeMkLmLdtQ'
+
     sheet_name = 'Sheet1'
     url = 'https://docs.google.com/spreadsheets/d/'+sheet_id+'/gviz/tq?tqx=out:csv&sheet='+sheet_name
     df=pd.read_csv(url)
@@ -86,6 +90,11 @@ def Rdata101():
     d = {str(k):v for k,v in d.items()}
 
     df1=df1.set_index('Section')
+
+    # new code for ignoring row
+    if 'Ignore' in df1.columns:
+        ignore_rows = df1['Ignore'] == 'yes'
+        df1 = df1[~ignore_rows]
 
     sections = df1.to_dict('index')
     sections = {str(k):v for k,v in sections.items()}
