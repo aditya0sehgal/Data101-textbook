@@ -93,9 +93,10 @@ def Rdata101():
 
     # new code for ignoring row
     if 'Ignore' in df1.columns:
-        ignore_rows = df1['Ignore'] == 'yes'
-        df1 = df1[~ignore_rows]
-
+        # ignore_rows = df1['Ignore'] == 'yes'
+        # df1 = df1[~ignore_rows]
+        df1 = df1[df1['Ignore'] != 'yes']
+        
     sections = df1.to_dict('index')
     sections = {str(k):v for k,v in sections.items()}
 
