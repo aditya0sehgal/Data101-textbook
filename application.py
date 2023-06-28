@@ -64,6 +64,79 @@ def sqlsnippet():
 # def Rdata101():
 #     return render_template("sqlSnippet.html", value = '1g4SFwZuRTO5-4uRuNN_pz3UQaqEoDUMXk0QjTFophJk', title = 'R Live Coding Tutorial Book')
 
+
+
+@application.route('/Rdata101practice', methods=['GET'])
+def practiceSection():
+    # Original sheet for the textbook. Uncomment below while pushing.
+    sheet_id = '1g4SFwZuRTO5-4uRuNN_pz3UQaqEoDUMXk0QjTFophJk'
+
+    # Copy of actual sheet for coding and testing. Comment below while pushing.
+    # sheet_id = '163hgBq_WSWhle4DpVszEfgnbJtznqbalXQeMkLmLdtQ'
+
+    sheet_name = 'Sheet1'
+    url = 'https://docs.google.com/spreadsheets/d/'+sheet_id+'/gviz/tq?tqx=out:csv&sheet='+sheet_name
+    df=pd.read_csv(url)
+    df.fillna('', inplace=True)
+    sheet_name = 'Sheet3'
+    url = 'https://docs.google.com/spreadsheets/d/'+sheet_id+'/gviz/tq?tqx=out:csv&sheet='+sheet_name
+    df1=pd.read_csv(url)
+    df1.fillna('', inplace=True)
+
+    df.drop(df.columns[df.columns.str.contains('unnamed',case = False)],axis = 1, inplace = True)
+    df1.drop(df1.columns[df1.columns.str.contains('unnamed',case = False)],axis = 1, inplace = True)
+
+    cols = df.columns.difference(['Section'])
+    # print("1", cols)
+    d = (df.groupby(['Section'])[cols]
+            .apply(lambda x: x.to_dict('records')).to_dict())
+    # print("2")
+    d = {str(k):v for k,v in d.items()}
+    # print("3", df1.columns)
+
+    df1=df1.set_index('Section')
+    # print("4")
+
+    # new code for ignoring row
+    if 'Ignore' in df1.columns:
+        df1 = df1[df1['Ignore'] != 'yes']
+
+    sections = df1.to_dict('index')
+    sections = {str(k):v for k,v in sections.items()}
+
+
+    final_dict = {}
+    prev = {}
+    prev_key = 0
+    curr = {}
+    for key in sections.keys():
+        sections[key]['child'] = {}
+        sections[key]['parent'] = key
+        if key in d:
+
+            sections[key]['snippets'] = d[key]
+        else :
+            sections[key]['snippets'] = {}
+        count = key.count('.')
+        curr = prev
+        s = key
+
+        if count > 0:
+            sections[key]['parent'] = prev_key
+            for i in range(count-1):
+                s = s.rsplit('.', 1)[0]
+                curr = curr['child'][s]
+            curr['child'][key] = sections[key]
+        else:
+            final_dict[key] = sections[key]
+            prev = final_dict[key]
+            prev_key = key
+
+    res = json.dumps(final_dict)
+    return render_template("datacamp.html",value=res,title = 'R Live Coding Tutorial Book', sheetId= sheet_id)
+
+
+
 @application.route('/Rdata101', methods=['GET'])
 def Rdata101():
     # Original sheet for the textbook. Uncomment below while pushing.
