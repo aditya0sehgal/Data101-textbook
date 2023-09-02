@@ -74,11 +74,11 @@ def practiceSection():
     # Copy of actual sheet for coding and testing. Comment below while pushing.
     # sheet_id = '163hgBq_WSWhle4DpVszEfgnbJtznqbalXQeMkLmLdtQ'
 
-    sheet_name = 'Sheet1'
+    sheet_name = 'Sheet4'
     url = 'https://docs.google.com/spreadsheets/d/'+sheet_id+'/gviz/tq?tqx=out:csv&sheet='+sheet_name
     df=pd.read_csv(url)
     df.fillna('', inplace=True)
-    sheet_name = 'Sheet3'
+    sheet_name = 'Sheet3'   
     url = 'https://docs.google.com/spreadsheets/d/'+sheet_id+'/gviz/tq?tqx=out:csv&sheet='+sheet_name
     df1=pd.read_csv(url)
     df1.fillna('', inplace=True)
@@ -92,36 +92,53 @@ def practiceSection():
             .apply(lambda x: x.to_dict('records')).to_dict())
     # print("2")
     d = {str(k):v for k,v in d.items()}
-    # print("3", df1.columns)
-
-    df1=df1.set_index('Section')
-    # print("4")
+    # print()
+    # print()
+    # print("3", d)
+    # print()
+    # print()
 
     # new code for ignoring row
     if 'Ignore' in df1.columns:
-        df1 = df1[df1['Ignore'] != 'yes']
+        ignore_rows = df1['Ignore'] == 'yes'
+        df1 = df1[~ignore_rows]
+
+    df1=df1.set_index('Section')
+    # print("4") 
+
 
     sections = df1.to_dict('index')
     sections = {str(k):v for k,v in sections.items()}
 
-
+    # print(sections)
     final_dict = {}
     prev = {}
     prev_key = 0
+    print("hello")
     curr = {}
     for key in sections.keys():
+        print(type(key))
+        print("hello")
         sections[key]['child'] = {}
-        sections[key]['parent'] = key
-        if key in d:
 
+        sections[key]['parent'] = key
+        
+        if key in d:
             sections[key]['snippets'] = d[key]
         else :
             sections[key]['snippets'] = {}
+        # print(key)
+        # if key == '0.0':
+        #     print()
+        #     print()
+        #     print(key , sections[key])
+        #     print()
         count = key.count('.')
         curr = prev
         s = key
+        # print(count, curr, s)
 
-        if count > 0:
+        if count > 0 and key.split('.')[1]!='0':
             sections[key]['parent'] = prev_key
             for i in range(count-1):
                 s = s.rsplit('.', 1)[0]
@@ -133,7 +150,7 @@ def practiceSection():
             prev_key = key
 
     res = json.dumps(final_dict)
-    return render_template("datacamp.html",value=res,title = 'R Live Coding Tutorial Book', sheetId= sheet_id)
+    return render_template("datacamp-practice.html",value=res,title = 'R Live Coding Tutorial Book', sheetId= sheet_id)
 
 
 

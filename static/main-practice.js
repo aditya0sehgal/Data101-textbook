@@ -3,21 +3,20 @@
 const base = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?`;
 const query = encodeURIComponent('Select *')
 const mime = 'text/x-mysql';
-// var jsondataquery={}
+// var jsondataquery_practice={}
 const storagesectionid="section-id-";
 var cache = {}
 var current_section_id;
 $(document).ready(function () {
-    console.log("helllo")
+    console.log("helllo", jsondataquery_practice)
     // init();
-    console.log("helllo111" , jsondataquery)
-    newlhs(jsondataquery)
-    console.log("helllo1" , jsondataquery)
+    newlhs(jsondataquery_practice)
     // createSectionLHS();
+    console.log("helllo1", jsondataquery_practice)
     scrollToTap();
     initAddedDCLightExercises();
     MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
-    console.log("helllo2" , jsondataquery)
+    console.log("helllo2", jsondataquery_practice)
   });
 
   function scrollToTap(){
@@ -77,7 +76,7 @@ function set_storage_section(event,ele,sectionid){
 async function createSqlSnippets(sectionid){
 
     console.log(sectionid)
-    var data=jsondataquery[sectionid]
+    var data=jsondataquery_practice[sectionid]
 
     createMainPage(data,sectionid,false)
 
@@ -175,9 +174,13 @@ async function createSqlSnippets(sectionid){
 
 function handleSectionClick(sectionid){
 
-    document.getElementById("maincontent").innerHTML = ' '
-    var data=jsondataquery[sectionid]
+    console.log(parseFloat(sectionid));
+    console.log(parseInt(sectionid));
+    console.log(sectionid);
 
+    document.getElementById("maincontent").innerHTML = ' '
+    var data=jsondataquery_practice[sectionid]
+    console.log(data);
     if(sectionid in cache){
         document.getElementById("maincontent").innerHTML = cache[sectionid]
     }
@@ -350,8 +353,8 @@ function sqlCodeSubmit(id){
     showSpinner();
     var resultContainer = document.getElementById("divResultSQL-"+id);
     resultContainer.innerHTML = "";
-    var existing_result=jsondataquery[sessionStorage.getItem('current-section'+sheetId)]['snippets'][id].Result
-    var type=jsondataquery[sessionStorage.getItem('current-section'+sheetId)]['snippets'][id].Type
+    var existing_result=jsondataquery_practice[sessionStorage.getItem('current-section'+sheetId)]['snippets'][id].Result
+    var type=jsondataquery_practice[sessionStorage.getItem('current-section'+sheetId)]['snippets'][id].Type
     if(existing_result){
         if(type=='mongo'){
             txt = "";
@@ -399,7 +402,7 @@ function sqlCodeSubmit(id){
     sqlcode=sqlcode.replace(/\s\s+/g, ' ')
     sqlcode=sqlcode.replace(/[\u200B-\u200D\uFEFF]/g, '');
     statement_type=sqlcode.split(" ")[0].toLowerCase();
-    var type=jsondataquery[sessionStorage.getItem('current-section'+sheetId)]['snippets'][id].Type
+    var type=jsondataquery_practice[sessionStorage.getItem('current-section'+sheetId)]['snippets'][id].Type
     if (type=='mongo'){
         var REST_CALL = "/mongoTutorialCode";
         if(sqlcode.includes("insert") || sqlcode.includes("update") || sqlcode.includes("delete")){
@@ -510,22 +513,22 @@ function createSectionJson(data_rows,data_cols){
     for(let i=0;i<data_rows.length;i++){
         var details=data_rows[i].c
         var sectionid=details[0].v
-        if(!(sectionid in jsondataquery)){
-            jsondataquery[sectionid]={}
+        if(!(sectionid in jsondataquery_practice)){
+            jsondataquery_practice[sectionid]={}
         }
         if(details[2]){
-           jsondataquery[sectionid]["description"]=details[2].v
+           jsondataquery_practice[sectionid]["description"]=details[2].v
         } 
         else{
-            jsondataquery[sectionid]["description"]=""
+            jsondataquery_practice[sectionid]["description"]=""
         }
         if(details[3]){
-            jsondataquery[sectionid]["pptslides"]=details[3].v
+            jsondataquery_practice[sectionid]["pptslides"]=details[3].v
          } 
          else{
-             jsondataquery[sectionid]["pptslides"]=""
+             jsondataquery_practice[sectionid]["pptslides"]=""
          }
-        jsondataquery[sectionid]["name"]=details[1].v
+        jsondataquery_practice[sectionid]["name"]=details[1].v
         
     }
     createSectionLHS()
@@ -544,16 +547,16 @@ function createSqlJson(data_rows,data_cols){
             }
         }
         let sectionid=dictsnip["Section"]
-        if(sectionid in jsondataquery){
-            if("snippets" in jsondataquery[sectionid]){
-                jsondataquery[sectionid]["snippets"].push(dictsnip)
+        if(sectionid in jsondataquery_practice){
+            if("snippets" in jsondataquery_practice[sectionid]){
+                jsondataquery_practice[sectionid]["snippets"].push(dictsnip)
             }
             else{
-                jsondataquery[sectionid]["snippets"]=[dictsnip]
+                jsondataquery_practice[sectionid]["snippets"]=[dictsnip]
             }
         }
         else{
-            jsondataquery[sectionid]={"snippets":[dictsnip]}
+            jsondataquery_practice[sectionid]={"snippets":[dictsnip]}
         }
     }
 }
@@ -561,8 +564,8 @@ function createSqlJson(data_rows,data_cols){
 function createSectionLHS(){
     var licurrent;
     var current_key;
-    var parentul=document.getElementById("sql-sections");
-    for (const [key, value] of Object.entries(jsondataquery)) {
+    var parentul=document.getElementById("sql-sections-practice-practice");
+    for (const [key, value] of Object.entries(jsondataquery_practice)) {
         console.log(value)
         let li=document.createElement("li");
         if(!("current-section"+sheetId in sessionStorage)|| sessionStorage.getItem("current-section"+sheetId)==key){
@@ -588,7 +591,7 @@ function createSectionLHS(){
       createSqlSnippets(current_key);
 }
 
-function newlhs(){
+function newlhs(jsondataquery_practice){
     var current_key;
     var current_parent;
     const buildLI = (data,key) => {
@@ -629,9 +632,10 @@ function newlhs(){
         // });
         return ul;
       };
-     document.getElementById("sql-sections").append(buildUL(jsondataquery))
+     document.getElementById("sql-sections-practice").append(buildUL(jsondataquery_practice))
+     console.log(typeof current_parent)
      handleSectionClick(current_parent);
-    //   console.log(buildUL(jsondataquery))
+    //   console.log(buildUL(jsondataquery_practice))
 }
 
 function toggleLHS(ele){
