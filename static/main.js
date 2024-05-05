@@ -16,7 +16,7 @@ $(document).ready(function () {
     // createSectionLHS();
     scrollToTap();
     initAddedDCLightExercises();
-    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    // MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
     console.log("helllo2" , jsondataquery)
   });
 
@@ -24,7 +24,7 @@ $(document).ready(function () {
     $("#maincontent").scrollTop(0);
   }
 
-function showSpinner() 
+function showSpinner()
 {
     let spinner = document.getElementById("spinner");
     let waiting=document.getElementById("waiting");
@@ -33,10 +33,10 @@ function showSpinner()
     mainbody.style.pointerEvents="none";
     spinner.className = "show";
     waiting.style.display="block";
-   
+
 }
 
-function hideSpinner() 
+function hideSpinner()
 {
     let spinner = document.getElementById("spinner");
     let waiting=document.getElementById("waiting");
@@ -99,7 +99,7 @@ async function createSqlSnippets(sectionid){
         return;
     }
     var snippetdata=data.snippets
-    
+
     for(let i=0;i<snippetdata.length;i++){
         if(snippetdata[i].Type == 'R'){
             let pre_code = snippetdata[i].PreExCode ? snippetdata[i].PreExCode : ''
@@ -117,7 +117,7 @@ async function createSqlSnippets(sectionid){
             childiv.setAttribute("id","example-"+i);
             childiv.innerHTML=txt;
             maindiv.append(childiv);
-            
+
             continue
         }
         else if(snippetdata[i].Type == 'Python'){
@@ -142,10 +142,10 @@ async function createSqlSnippets(sectionid){
         txt=txt+"<h2>"+parseInt(i+1)+". " + snippetdata[i].Title +"</h2>"
         txt=txt+"<textarea id='textarea-"+i+"' wrap='logical' style='display: none;'>"+snippetdata[i].Query+"</textarea>"
         txt=txt+"<p>Edit the SQL Statement, and click Run SQL to see the result.</p>"
-        txt=txt+"<button class='ws-btn' type='button' onclick='sqlCodeSubmit("+i+");'>Run Query »</button>" + "<h3>Result:</h3>" 
+        txt=txt+"<button class='ws-btn' type='button' onclick='sqlCodeSubmit("+i+");'>Run Query »</button>" + "<h3>Result:</h3>"
         txt=txt+"<div id='resultSQL-"+i+"'>"+
         "<div class='w3-white' id='divResultSQL-"+i+"' style='display: block; padding:10px;'>"+
-        "  Results will be displayed here" + 
+        "  Results will be displayed here" +
         "</div></div> </div>  ";
         var childiv=document.createElement("div");
         childiv.setAttribute("id","example-"+i);
@@ -174,7 +174,7 @@ async function createSqlSnippets(sectionid){
 
 
 function handleSectionClick(sectionid){
-
+    console.log(sectionid);
     document.getElementById("maincontent").innerHTML = ' '
     var data=jsondataquery[sectionid]
 
@@ -192,7 +192,7 @@ function handleSectionClick(sectionid){
         }
     }
     initAddedDCLightExercises();
-    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    // MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
     scrollToTap()
 }
 function createMainPage(data,sectionid,child){
@@ -218,6 +218,11 @@ function generate_content(data,sectionid){
     boundlessDetails.setAttribute("class","boundlessDetails")
     let pptslidediv =  document.createElement('div');
     pptslidediv.setAttribute("id","pptslides-"+sectionid)
+
+    let videodiv =  document.createElement('iframe');
+    videodiv.setAttribute("id","video-"+sectionid)
+    videodiv.setAttribute("allowfullscreen",true)
+
     let detailsdiv =  document.createElement('div');
     detailsdiv.setAttribute("class","section-description")
     let snippetdiv = document.createElement('div');
@@ -241,10 +246,23 @@ function generate_content(data,sectionid){
         pptslidediv.setAttribute("style","display:block;")
     }
 
+    if(data.Video == ''){
+        videodiv.src = ''
+        videodiv.setAttribute("style","display:none;")
+    }
+    else{
+        videodiv.src = data.Video
+        videodiv.width = "840";
+        videodiv.height = "480";
+        videodiv.setAttribute("style","display:block;")
+        videodiv.allowfullscreen = true;
+    }
+
     if(!("snippets" in data)){
         return;
     }
     var snippetdata=data.snippets
+    console.log(snippetdata);
     for(let i=0;i<snippetdata.length;i++){
         if(snippetdata[i].Type == 'R'){
             let pre_code = snippetdata[i].PreExCode ? snippetdata[i].PreExCode : ''
@@ -268,8 +286,26 @@ function generate_content(data,sectionid){
             var childiv=document.createElement("div");
             childiv.setAttribute("id","example-"+i);
             childiv.innerHTML=txt;
+
+            let videoinsnippetdiv =  document.createElement('iframe');
+            videoinsnippetdiv.setAttribute("id","video-"+sectionid)
+            videoinsnippetdiv.setAttribute("allowfullscreen",true)
+
+            if(snippetdata[i].Video == ''){
+                videoinsnippetdiv.src = ''
+                videoinsnippetdiv.setAttribute("style","display:none;")
+            }
+            else{
+                videoinsnippetdiv.src = snippetdata[i].Video
+                videoinsnippetdiv.width = "840";
+                videoinsnippetdiv.height = "480";
+                videoinsnippetdiv.setAttribute("style","display:block;")
+                videoinsnippetdiv.allowfullscreen = true;
+            }
+            snippetdiv.append(videoinsnippetdiv);
+            snippetdiv.append(document.createElement('br'))
             snippetdiv.append(childiv);
-            
+
             continue
         }
         else if(snippetdata[i].Type == 'Python'){
@@ -294,10 +330,10 @@ function generate_content(data,sectionid){
         txt=txt+"<h3>"+parseInt(i+1)+". " + snippetdata[i].Title +"</h3>"
         txt=txt+"<textarea id='textarea-"+i+"' wrap='logical' style='display: none;'>"+snippetdata[i].Query+"</textarea>"
         txt=txt+"<p>Edit the SQL Statement, and click Run SQL to see the result.</p>"
-        txt=txt+"<button class='ws-btn' type='button' onclick='sqlCodeSubmit("+i+");'>Run Query »</button>" + "<h3>Result:</h3>" 
+        txt=txt+"<button class='ws-btn' type='button' onclick='sqlCodeSubmit("+i+");'>Run Query »</button>" + "<h3>Result:</h3>"
         txt=txt+"<div id='resultSQL-"+i+"'>"+
         "<div class='w3-white' id='divResultSQL-"+i+"' style='display: block; padding:10px;'>"+
-        "  Results will be displayed here" + 
+        "  Results will be displayed here" +
         "</div></div> </div>  ";
         var childiv=document.createElement("div");
         childiv.setAttribute("id","example-"+i);
@@ -323,6 +359,7 @@ function generate_content(data,sectionid){
     maindiv.append(header)
     maindiv.append(dashed)
     maindiv.append(pptslidediv)
+    maindiv.append(videodiv)
     maindiv.append(detailsdiv)
 
     if(data.BoundlessDataset == ''){
@@ -336,7 +373,7 @@ function generate_content(data,sectionid){
         boundlessDetails.append(link)
         maindiv.append(boundless)
         maindiv.append(boundlessDetails)
-    } 
+    }
 
     maindiv.append(snippetdiv)
     return maindiv
@@ -347,7 +384,7 @@ function generate_content(data,sectionid){
 
 function sqlCodeSubmit(id){
 
-    showSpinner();
+    // showSpinner();
     var resultContainer = document.getElementById("divResultSQL-"+id);
     resultContainer.innerHTML = "";
     var existing_result=jsondataquery[sessionStorage.getItem('current-section'+sheetId)]['snippets'][id].Result
@@ -358,7 +395,7 @@ function sqlCodeSubmit(id){
             txt = txt + "<div style='padding:10px;'><div style='margin-bottom:10px;'>Number of Records: " + 1 + "</div>";
             txt=txt+"<div style='margin-bottom:10px;'>Execution Time: " + 0.000012 + " seconds</div>"
             resultContainer.innerHTML = txt + '<div class="" style="height:auto;max-height:600px;overflow-y: auto;"><pre>' + existing_result + '</pre></div>';
-            hideSpinner()
+            // hideSpinner()
             return
         }
         txt = "";
@@ -379,7 +416,7 @@ function sqlCodeSubmit(id){
             scrollY: 700,
             responsive: true
         });
-        hideSpinner()
+        // hideSpinner()
         return
     }
 
@@ -404,7 +441,7 @@ function sqlCodeSubmit(id){
         var REST_CALL = "/mongoTutorialCode";
         if(sqlcode.includes("insert") || sqlcode.includes("update") || sqlcode.includes("delete")){
             resultContainer.innerHTML='Please run the above query in the local workbench.'
-            hideSpinner();
+            // hideSpinner();
             return;
         }
     }
@@ -425,7 +462,7 @@ function sqlCodeSubmit(id){
                 txt = txt + "<div style='padding:10px;'><div style='margin-bottom:10px;'>Number of Records: " + result['result'].length+ "</div>";
                 txt=txt+"<div style='margin-bottom:10px;'>Execution Time: " + parseFloat(result['execution']).toFixed(5) + " seconds</div>"
                 resultContainer.innerHTML = txt + '<div class="" style="height:auto;max-height:600px;overflow-y: auto;"><pre>' + JSON.stringify(result['result'], null, 4) + '</pre></div>';
-                hideSpinner()
+                // hideSpinner()
                 return
             }
             res=result['result']
@@ -455,13 +492,13 @@ function sqlCodeSubmit(id){
             else{
                 resultContainer.innerHTML='Please run the above query in the local workbench.'
             }
-            hideSpinner()
+            // hideSpinner()
         },
         error: function (err) {
             console.log("ERROR")
             console.log(err)
             resultContainer.innerHTML='Please run the above query in the local workbench.'
-            hideSpinner()
+            // hideSpinner()
         },
         dataType: 'json',
     });
@@ -515,18 +552,18 @@ function createSectionJson(data_rows,data_cols){
         }
         if(details[2]){
            jsondataquery[sectionid]["description"]=details[2].v
-        } 
+        }
         else{
             jsondataquery[sectionid]["description"]=""
         }
         if(details[3]){
             jsondataquery[sectionid]["pptslides"]=details[3].v
-         } 
+         }
          else{
              jsondataquery[sectionid]["pptslides"]=""
          }
         jsondataquery[sectionid]["name"]=details[1].v
-        
+
     }
     createSectionLHS()
 }
@@ -618,14 +655,14 @@ function newlhs(){
         if(data.child) li.appendChild(buildUL(data.child));
         return li;
       };
-      
+
       const buildUL = (data) => {
         const ul = document.createElement('ul');
         for(let d in data) {
             ul.appendChild(buildLI(data[d],d));
         }
         // data.forEach(d => {
-        //   ul.appendChild(buildLI(d));    
+        //   ul.appendChild(buildLI(d));
         // });
         return ul;
       };

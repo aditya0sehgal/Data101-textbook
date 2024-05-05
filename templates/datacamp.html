@@ -30,67 +30,84 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" />
 
- 
-<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.js"></script>
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-      showProcessingMessages: false,
-      tex2jax: { inlineMath: [['$','$'],['\\(','\\)']] }
-    });
-  </script>
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  
-  
-  <link rel="stylesheet" href="/static/docs.css">
-  
-  <link rel="stylesheet" href="/static/codemirror-1.css">
-  <link rel="stylesheet" href="/static/show-hint.css">
-  <script src="/static/codemirror.js"></script>
-  <script src="/static/matchbrackets.js"></script>
-  <script src="/static/sql.js"></script>
-  <script src="/static/show-hint.js"></script>
-  <script src="/static/sql-hint.js"></script>
-  <script type="text/javascript" src="/static/main.js"></script>
-  
-  
-  <link rel="stylesheet" href="/static/w3schools.css">
-  <link rel="stylesheet" href="/static/codemirror.css">
-  <link rel="stylesheet" href="/static/lhs.css">
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.css"/>
-  <link rel="stylesheet" href="/static/main.css">
-	
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.js"></script>
 
-</head>
-<body  onload="">
-    <script id="MathJax-script" src="http://bandicoot.maths.adelaide.edu.au/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [
+            ["$", "$"],
+            ["\\(", "\\)"],
+          ],
+        },
+        svg: {
+          fontCache: "global",
+        },
+      };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+    <link rel="stylesheet" href="/static/docs.css" />
+
+    <link rel="stylesheet" href="/static/codemirror-1.css" />
+    <link rel="stylesheet" href="/static/show-hint.css" />
+    <script src="/static/codemirror.js"></script>
+    <script src="/static/matchbrackets.js"></script>
+    <script src="/static/sql.js"></script>
+    <script src="/static/show-hint.js"></script>
+    <script src="/static/sql-hint.js"></script>
+    <script type="text/javascript" src="/static/main.js"></script>
+
+    <link rel="stylesheet" href="/static/w3schools.css" />
+    <link rel="stylesheet" href="/static/codemirror.css" />
+    <link rel="stylesheet" href="/static/lhs.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.css"
+    />
+    <link rel="stylesheet" href="/static/main.css" />
+  </head>
+  <body onload="">
     <!-- <a class="toggle-bar" onclick="toggleLHS(this)" href="#"><i class="fa fa-align-justify"></i></a> -->
-    <div id="mainbody" class="book font-size-2 font-family-1 with-summary">
-        <div class="book-summary" style="width: 20%;  position: fixed;
-        z-index: 1;
-        top: 0;
-        left: 0;height: 100%;  overflow-x: hidden;">
-            <nav role="navigation">
-                <ul class="summary" id="sql-sections">
-                <li class="lhs-heading-menu"><a href="./">{{title}}</a>
-                </li>
-                <li class="divider"></li>    
-                </ul>
-            </nav>
-        </div>
 
-	    <div id="maincontent" class="rhs fixed">
-            <!-- <h2 id="section-heading"></h2>
-            <hr class="dashed">
-            <div id="pptslides"></div>
-            <p id="section-description"></p>
-            <div id="maincontainer">
-            </div> -->
-		
+    <div id="mainbody" class="book font-size-2 font-family-1 with-summary">
+      <div
+        class="book-summary"
+        style="
+          width: 20%;
+          position: fixed;
+          z-index: 1;
+          top: 0;
+          left: 0;
+          height: 100%;
+          overflow-x: hidden;
+        "
+      >
+        <nav role="navigation">
+          <ul class="summary" id="sql-sections">
+            <li class="lhs-heading-menu"><a href="./">{{title}}</a></li>
+            <li class="divider"></li>
+          </ul>
+        </nav>
+      </div>
+
+      <div id="maincontent" class="rhs fixed">
+        <!-- <h2 id="section-heading"></h2>
+                <hr class="dashed">
+                <div id="pptslides"></div>
+                <p id="section-description"></p>
+                <div id="maincontainer">
+                </div> -->
+      </div>
     </div>
-</div>
-<div id="waiting">
-    <div id="spinner"></div> 
-</div> 
-</body>
-<script type="text/javascript" src="//cdn.datacamp.com/dcl-react.js.gz"></script>
+    <div id="waiting">
+      <div id="spinner"></div>
+    </div>
+  </body>
+  <script
+    type="text/javascript"
+    src="//cdn.datacamp.com/dcl-react.js.gz"
+  ></script>
 </html>
