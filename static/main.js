@@ -1,39 +1,40 @@
 
 // const sheetId='12iRkOmBHaahLrLbBLvqnzSKzWOsO1xHEQckGvXNpD-o'
-const base = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?`;
+const base = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?`; // Base URL for Google Sheets API
 const query = encodeURIComponent('Select *')
 const mime = 'text/x-mysql';
 // var jsondataquery={}
-const storagesectionid="section-id-";
-var cache = {}
-var current_section_id;
+const storagesectionid="section-id-"; // Prefix for section ID storage
+var cache = {};  // Cache for storing section data
+var current_section_id;  // Current section ID
+
+
 $(document).ready(function () {
-    console.log("helllo")
     // init();
-    console.log("helllo111" , jsondataquery)
     newlhs(jsondataquery)
-    console.log("helllo1" , jsondataquery)
     // createSectionLHS();
     scrollToTap();
     initAddedDCLightExercises();
-    // MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
-    console.log("helllo2" , jsondataquery)
-  });
+});
 
-  function scrollToTap(){
+function scrollToTap(){
     $("#maincontent").scrollTop(0);
-  }
+}
 
+// The showSpinner and hideSpinner functions control the visibility of a spinner element, used to indicate loading. 
+// Done by modifying the css accessibile properties of the corresponding
+// HTML elements - defined in datacamp.html
+// showSpinner makes the spinner visible and dims the main content, 
+// while hideSpinner restores the main content's visibility.
 function showSpinner()
 {
     let spinner = document.getElementById("spinner");
     let waiting=document.getElementById("waiting");
     let mainbody=document.getElementById("mainbody");
-    mainbody.style.opacity = "0.3";
-    mainbody.style.pointerEvents="none";
-    spinner.className = "show";
-    waiting.style.display="block";
-
+    mainbody.style.opacity = "0.3";  // Dim the main content
+    mainbody.style.pointerEvents = "none";  // Disable pointer events
+    spinner.className = "show";  // Show the spinner
+    waiting.style.display = "block";  // Show the waiting message
 }
 
 function hideSpinner()
@@ -41,45 +42,51 @@ function hideSpinner()
     let spinner = document.getElementById("spinner");
     let waiting=document.getElementById("waiting");
     let mainbody=document.getElementById("mainbody");
-    mainbody.style.opacity = "1";
-    mainbody.style.pointerEvents="auto";
-    spinner.className = spinner.className.replace("show", "");
-    waiting.style.display="none";
+    mainbody.style.opacity = "1";  // Restore main content opacity
+    mainbody.style.pointerEvents = "auto";  // Enable pointer events
+    spinner.className = spinner.className.replace("show", "");  // Hide the spinner
+    waiting.style.display = "none";  // Hide the waiting message
 }
 
+// The set_storage_section function updates the active section in sessionStorage
+//  and displays the corresponding content. It also handles the UI changes for the 
+// active section and calls handleSectionClick if the parent section changes.
 function set_storage_section(event,ele,sectionid){
     event.stopPropagation();
+
+    // start showing the spinner when loading.
     showSpinner()
 
     let parent = ele.getAttribute("data-parent")
 
     var prevsection = JSON.parse(sessionStorage.getItem('current-section'+sheetId))['key'];
     var prevele = document.getElementById(storagesectionid+prevsection);
-    prevele.classList.remove("active");
-    ele.classList.add("active");
+    prevele.classList.remove("active");  // Remove active class from previous section
+    ele.classList.add("active");  // Add active class to current section
     let active = {"key":sectionid, "parent": parent }
     sessionStorage.setItem('current-section'+sheetId, JSON.stringify(active));
 
     if(parent != current_section_id){
-
-        document.getElementById("maincontent").innerHTML = ''
-        handleSectionClick(parent)
+        document.getElementById("maincontent").innerHTML = '';  // Clear main content
+        handleSectionClick(parent);  // Handle parent section click
     }
     let elmntToView = document.getElementById("section-"+sectionid);
-    elmntToView.scrollIntoView();
+    elmntToView.scrollIntoView(); // Scroll to the selected section
     current_section_id = parent
+
+    // hide the spinner when loading complete.
     hideSpinner()
 
     // location.reload();
-
 }
 
+// The createSqlSnippets function dynamically generates the SQL code snippets and 
+// their associated UI elements. It handles both R and Python snippets and sets up 
+// the corresponding DataCamp exercise containers.
 async function createSqlSnippets(sectionid){
-
     console.log(sectionid)
-    var data=jsondataquery[sectionid]
-
-    createMainPage(data,sectionid,false)
+    var data = jsondataquery[sectionid];  // Get data for the section
+    createMainPage(data, sectionid, false);  // Create the main page
 
     document.getElementById("section-heading").innerHTML=data.Name
     document.getElementById("section-description").innerHTML=data.Details
@@ -172,7 +179,9 @@ async function createSqlSnippets(sectionid){
     scrollToTap()
 }
 
-
+// The handleSectionClick function handles the content display when a 
+// section is clicked. It uses a cache to improve performance and 
+// avoid re-fetching data. The content is then displayed in the maincontent div.
 function handleSectionClick(sectionid){
     console.log(sectionid);
     document.getElementById("maincontent").innerHTML = ' '
@@ -186,15 +195,17 @@ function handleSectionClick(sectionid){
             document.getElementById("maincontent").innerHTML = cache[data.parent]
         }
         else{
-            let divcontent = createMainPage(data,sectionid,false)
-            cache[sectionid] = divcontent.innerHTML
-            cache[data.parent] = divcontent.innerHTML
+            let divcontent = createMainPage(data, sectionid, false);  // Create main page content
+            cache[sectionid] = divcontent.innerHTML;  // Cache section content
+            cache[data.parent] = divcontent.innerHTML;  // Cache parent content
         }
     }
-    initAddedDCLightExercises();
-    // MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
-    scrollToTap()
+    initAddedDCLightExercises();  // Initialize DataCamp Light exercises
+    scrollToTap();  // Scroll to top
 }
+
+// The createMainPage function recursively generates the content for a section and its child sections. 
+// It calls generate_content to create the main structure and appends it to the main content div.
 function createMainPage(data,sectionid,child){
     let mdiv= document.getElementById("maincontent")
     let topdata = generate_content(data,sectionid)
@@ -205,6 +216,11 @@ function createMainPage(data,sectionid,child){
     return mdiv
 }
 
+// The generate_content function creates the main content structure for a section, 
+// including headers, slides, videos, and code snippets. 
+// It dynamically generates HTML elements based on the provided data.
+// THIS IS THE MAIN FUNCTION FOR GENERATING CODE THAT GETS DISPLAYED IN EACH SECTION.
+// ADDED SUPPORT FOR PRESENTATION VIA GOOGLE SLIDES AND ALSO VIDEOS FOR VIDEO EXPLANATIONS.
 function generate_content(data,sectionid){
     let maindiv = document.createElement('div');
     maindiv.setAttribute("id","section-"+sectionid)
@@ -379,9 +395,7 @@ function generate_content(data,sectionid){
     return maindiv
 }
 
-
-
-
+// NOT USED FOR THE MAIN R AND Python TEXTBOOKS 
 function sqlCodeSubmit(id){
 
     // showSpinner();
@@ -509,17 +523,12 @@ function sqlCodeSubmit(id){
 async function init(){
     var sheetName= 'Sheet1';
     var url = `${base}&sheet=${sheetName}&tq=${query}`
-    console.log("1")
     var sqlsnipp= await fetchGoogleSheetsData(url,"sqlsnippets")
     console.log(sqlsnipp)
-    console.log("2")
     sheetName = 'Sheet2';
     url = `${base}&sheet=${sheetName}&tq=${query}`
     var sections = await fetchGoogleSheetsData(url,"sections")
-    console.log("3")
 }
-
-
 
 async function fetchGoogleSheetsData(url,type){
     var res;
@@ -595,6 +604,9 @@ function createSqlJson(data_rows,data_cols){
     }
 }
 
+// The createSectionLHS and newlhs functions create the left-hand side navigation 
+// for the sections and subsections. The toggleLHS function toggles the 
+// visibility of the left-hand side navigation.
 function createSectionLHS(){
     var licurrent;
     var current_key;

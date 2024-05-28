@@ -11,22 +11,6 @@ import bson.json_util as json_util
 import json
 import pandas as pd
 
-# import flask_monitoringdashboard as dashboard
-
-
-
-# def analytics_log():
-#     print(time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
-
-
-
-# scheduler = BackgroundScheduler()
-# scheduler.add_job(func=print_date_time, trigger="interval", seconds=60)
-# scheduler.start()
-
-# # Shut down the scheduler when exiting the app
-# atexit.register(lambda: scheduler.shutdown())
-
 class JsonEncoder(JSONEncoder):
     def default(self, obj):
         if isinstance(obj, decimal.Decimal):
@@ -41,15 +25,9 @@ CORS(app)
 app.json_encoder = JsonEncoder
 # dashboard.bind(app)
 
-
-
-
 @app.route('/', methods=['GET'])
 def home():
     return render_template("home.html")
-
-
-
 
 
 @app.route('/editor', methods=['GET'])
@@ -59,81 +37,6 @@ def html_editor():
 @app.route('/sql', methods=['GET'])
 def sqlsnippet():
     return render_template("sqlSnippet.html", value = '1Iu-zCunodM-l1xH1sU50Huf6BDWoBBBG7xd_7u8plgk', title = 'SQL Live Coding Tutorial Book')
-
-# @app.route('/Rdata101', methods=['GET'])
-# def Rdata101():
-#     return render_template("sqlSnippet.html", value = '1g4SFwZuRTO5-4uRuNN_pz3UQaqEoDUMXk0QjTFophJk', title = 'R Live Coding Tutorial Book')
-
-
-# @app.route('/Rdata101practice', methods=['GET'])
-# def practiceSection():
-#     # Original sheet for the textbook. Uncomment below while pushing.
-#     sheet_id = '1g4SFwZuRTO5-4uRuNN_pz3UQaqEoDUMXk0QjTFophJk'
-
-#     # Copy of actual sheet for coding and testing. Comment below while pushing.
-#     # sheet_id = '163hgBq_WSWhle4DpVszEfgnbJtznqbalXQeMkLmLdtQ'
-
-#     sheet_name = 'Sheet4'
-#     url = 'https://docs.google.com/spreadsheets/d/'+sheet_id+'/gviz/tq?tqx=out:csv&sheet='+sheet_name
-#     df=pd.read_csv(url)
-#     df.fillna('', inplace=True)
-#     sheet_name = 'Sheet3'
-#     url = 'https://docs.google.com/spreadsheets/d/'+sheet_id+'/gviz/tq?tqx=out:csv&sheet='+sheet_name
-#     df1=pd.read_csv(url)
-#     df1.fillna('', inplace=True)
-
-#     df.drop(df.columns[df.columns.str.contains('unnamed',case = False)],axis = 1, inplace = True)
-#     df1.drop(df1.columns[df1.columns.str.contains('unnamed',case = False)],axis = 1, inplace = True)
-
-#     cols = df.columns.difference(['Section'])
-#     # print("1", cols)
-#     d = (df.groupby(['Section'])[cols]
-#             .apply(lambda x: x.to_dict('records')).to_dict())
-#     # print("2")
-#     d = {str(k):v for k,v in d.items()}
-#     # print("3", df1.columns)
-
-#     df1=df1.set_index('Section')
-#     # print("4")
-
-#     # new code for ignoring row
-#     if 'Ignore' in df1.columns:
-#         df1 = df1[df1['Ignore'] != 'yes']
-
-#     sections = df1.to_dict('index')
-#     sections = {str(k):v for k,v in sections.items()}
-
-
-#     final_dict = {}
-#     prev = {}
-#     prev_key = 0
-#     curr = {}
-#     for key in sections.keys():
-#         sections[key]['child'] = {}
-#         sections[key]['parent'] = key
-#         if key in d:
-
-#             sections[key]['snippets'] = d[key]
-#         else :
-#             sections[key]['snippets'] = {}
-#         count = key.count('.')
-#         curr = prev
-#         s = key
-
-#         if count > 0 and key.split('.')[1]!='0':
-#             sections[key]['parent'] = prev_key
-#             for i in range(count-1):
-#                 s = s.rsplit('.', 1)[0]
-#                 curr = curr['child'][s]
-#             curr['child'][key] = sections[key]
-#         else:
-#             final_dict[key] = sections[key]
-#             prev = final_dict[key]
-#             prev_key = key
-
-#     res = json.dumps(final_dict)
-#     return render_template("datacamp.html",value=res,title = 'R Live Coding Tutorial Book', sheetId= sheet_id)
-
 
 @app.route('/Rdata101', methods=['GET'])
 def Rdata101():
@@ -208,6 +111,7 @@ def Rdata101():
 def main_r_page():
     return render_template("main-r.html")
 
+# NOT USED FOR THE R AND PYTHON DATA-101 CLASSES.
 @app.route('/sqlTutorialCode', methods=['POST'])
 def sqlTutorialCode():
     data=request.get_json()
@@ -242,7 +146,7 @@ def sqlTutorialCode():
     conn.close()
     return jsonify(json.dumps({"result":details,"cols":field_names,"error":error,"execution":execution_time},cls=JsonEncoder))
 
-
+# NOT USED FOR THE R AND PYTHON DATA-101 CLASSES.
 @app.route('/mongoTutorialCode', methods=['POST'])
 def mongoTutorialCode():
     data=request.get_json()
@@ -269,8 +173,6 @@ def mongoTutorialCode():
     else:
          res.append(x)
     return jsonify(json.dumps({"result":res,"execution":execution_time},cls=JsonEncoder))
-
-
 
 @app.route('/test', methods=['GET'])
 def test():
@@ -333,31 +235,15 @@ def test():
 def highcharts():
     return render_template("highcharts.html")
 
-# @app.route('/htmleditor', methods=['GET'])
-# def htmleditor():
-#     return render_template("htmleditor.html")
-
-# @app.route('/datacamp', methods=['GET'])
-# def codeSnippet():
-#     sheet_id = '1aX7hU251jONPZsAbcqMOoZBjqDs_0pwuI2OfSPmtApk'
-#     url = 'https://docs.google.com/spreadsheets/d/'+sheet_id+'/gviz/tq?tqx=out:csv&sheet=Sheet1'
-#     df=pd.read_csv(url)
-
-#     url = 'https://docs.google.com/spreadsheets/d/'+sheet_id+'/gviz/tq?tqx=out:csv&sheet=Sheet2'
-#     df1=pd.read_csv(url)
-
-#     finaldf=pd.merge(df1, df, on="Section" , how = "outer")
-
-#     cols = finaldf.columns.difference(['Section','Name','Details'])
-#     d = (finaldf.groupby(['Section','Name','Details'])[cols]
-#             .apply(lambda x: x.to_dict(orient='records'))
-#             .reset_index(name='Snippets')
-#             .to_json(orient='records'))
-
-#     return render_template("datacamp.html",value=d)
+# TO EDIT TEXT BLOCKS AND CONVERT THEM INTO HTML CODE TO DIRECTLY
+# ENTER IN THE GOOGLE SHEET.
+# FORMATTING IS TAKEN CARE BY THE VIEW ON THIS ROUTE.
+@app.route('/htmleditor', methods=['GET'])
+def htmleditor():
+    return render_template("htmleditor.html")
 
 
-
+# NOT USED FOR THE R AND PYTHON DATA-101 CLASSES.
 def getMongoDbConnection():
     client = MongoClient('mongodb+srv://db-mongodb-nyc1-62083-a7614619.mongo.ondigitalocean.com',
                      username='Student',
@@ -369,6 +255,7 @@ def getMongoDbConnection():
     return mydb
 
 
+# NOT USED FOR THE R AND PYTHON DATA-101 CLASSES.
 def getSqlConnection():
     conn = pymysql.connect(
     host= "209.97.156.178",
@@ -382,7 +269,7 @@ def getSqlConnection():
     cur = conn.cursor(pymysql.cursors.DictCursor)
     return conn,cur
 
+# MAIN FUNCTION TO RUN THE INITIALIZED APP.
 if __name__ == "__main__":
     app.run(port=5001,debug=True)
 #use_reloader=False
-
