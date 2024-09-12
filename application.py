@@ -41,11 +41,13 @@ def sqlsnippet():
 @app.route('/Rdata101', methods=['GET'])
 def Rdata101():
     # Original sheet for the textbook. Uncomment below while pushing.
-    sheet_id = '1g4SFwZuRTO5-4uRuNN_pz3UQaqEoDUMXk0QjTFophJk'
+    # sheet_id = '1g4SFwZuRTO5-4uRuNN_pz3UQaqEoDUMXk0QjTFophJk'
+    sheet_id = '1HgXUuY_zCoMNWjpIeuDEMgSdJRWp75BV7DyT3eKSOP8'
+
 
     # Copy of actual sheet for coding and testing. Comment below while pushing.
     # sheet_id = '163hgBq_WSWhle4DpVszEfgnbJtznqbalXQeMkLmLdtQ'
-
+    # https://docs.google.com/spreadsheets/d/1HgXUuY_zCoMNWjpIeuDEMgSdJRWp75BV7DyT3eKSOP8/pub?output=csv
     sheet_name = 'Sheet1'
     url = 'https://docs.google.com/spreadsheets/d/'+sheet_id+'/gviz/tq?tqx=out:csv&sheet='+sheet_name
     df=pd.read_csv(url)
@@ -74,8 +76,6 @@ def Rdata101():
 
     sections = df1.to_dict('index')
     sections = {str(k):v for k,v in sections.items()}
-
-    print(sections)
 
     final_dict = {}
     prev = {}
